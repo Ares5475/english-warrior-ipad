@@ -253,8 +253,17 @@ body {
 
 <script>
 function speak(en){
-  // 用 Google TTS 免费 API（无需 key）
-  var audio = new Audio('https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=' + encodeURIComponent(en));
+  // 优先用国内可访问的有道词典发音API
+  var audio = new Audio('https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(en) + '&type=1');
+  audio.playbackRate = 0.9; // 稍微放慢，适合小学生跟读
+  var played = false;
+  audio.onerror = function(){
+    if(!played){
+      played = true;
+      // 失败时用浏览器自带TTS
+      speechSynthesis.speak(new SpeechSynthesisUtterance(en));
+    }
+  };
   audio.play();
 }
 
