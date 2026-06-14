@@ -234,6 +234,12 @@ body {
 </div></div>
 
 <script>
+function speak(en){
+  // 用 Google TTS 免费 API（无需 key）
+  var audio = new Audio('https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=' + encodeURIComponent(en));
+  audio.play();
+}
+
 
 
 const VOCAB = {
@@ -5109,7 +5115,7 @@ function renderCard(){
 }
 
 function fl(){ document.getElementById('fc').classList.toggle('f'); }
-function spk(){ var units=getUnits(); var w=units[S.uid].words[S.ci]; speechSynthesis.speak(new SpeechSynthesisUtterance(w.en)); }
+function spk(){ var units=getUnits(); var w=units[S.uid].words[S.ci]; speak(w.en); }
 function nc(){ var units=getUnits(); if(S.ci < units[S.uid].words.length-1){ S.ci++; renderCard(); } }
 function pc(){ if(S.ci>0){ S.ci--; renderCard(); } }
 function fL1(){
@@ -5151,7 +5157,7 @@ function renderQuiz(){
     qo.appendChild(b);
   });
 }
-function playQSound(){ var w=S.qw[S.qi]; speechSynthesis.speak(new SpeechSynthesisUtterance(w.en)); }
+function playQSound(){ var w=S.qw[S.qi]; speak(w.en); }
 function pQ(){ playQSound(); }
 function handleQuiz(sel, btn){
   var w = S.qw[S.qi];
@@ -5160,7 +5166,7 @@ function handleQuiz(sel, btn){
   if(sel.cn === w.cn){
     btn.classList.add('y');
     S.qok++;
-    speechSynthesis.speak(new SpeechSynthesisUtterance('Good job'));
+    speak('Good job');
   } else {
     btn.classList.add('n');
     for(var i=0;i<all.length;i++){ if(all[i].textContent === w.cn) all[i].classList.add('y'); }
@@ -5217,7 +5223,7 @@ function tR(){
   btn.textContent = '🔴';
   document.getElementById('sf').textContent = '正在听你读...';
   var w = S.sw[S.si];
-  speechSynthesis.speak(new SpeechSynthesisUtterance(w.en));
+  speak(w.en);
   setTimeout(function(){
     var score = Math.floor(Math.random()*35)+65;
     showScore(score);
@@ -5258,9 +5264,9 @@ function renderSpell(){
   inp.value = '';
   inp.className = 'xi';
   inp.focus();
-  speechSynthesis.speak(new SpeechSynthesisUtterance(w.en));
+  speak(w.en);
 }
-function pS(){ var w=S.xw[S.xi]; speechSynthesis.speak(new SpeechSynthesisUtterance(w.en)); }
+function pS(){ var w=S.xw[S.xi]; speak(w.en); }
 function cS(){
   var w = S.xw[S.xi];
   var val = document.getElementById('xi').value.trim().toLowerCase();
