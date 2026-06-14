@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <title>英语小勇士</title>
 <style>
 :root {
@@ -157,7 +158,8 @@ body {
   <div class="bar"><div></div><div id="sb" style="display:none;background:linear-gradient(135deg,var(--d),#fd79a8);color:#fff;border-radius:16px;padding:5px 12px;font-weight:800;font-size:13px;">&#x1F525; <span id="sd">0</span> &#x5929;</div></div>
   <h2 style="font-size:22px;font-weight:900;color:var(--p);">&#x9009;&#x62E9;&#x4F60;&#x7684;&#x5E74;&#x7EA7;</h2>
   <p style="color:var(--m);margin-bottom:6px;font-size:14px;">&#x6210;&#x4E3A;&#x82F1;&#x8BED;&#x5C0F;&#x52C7;&#x58EB;&#xFF01;</p>
-  <div class="hd"><div class="hi">&#x2B50; <span id="ts">0</span> &#x661F;&#x661F;</div><div class="hi">&#x1F4DA; <span id="tw">0</span> &#x5DF2;&#x638C;&#x63E1;</div></div>
+  <div class="hd">
+    <button class="hi" onclick="go('wr')">&#x274E;&#x8BCD;&#x672C;</button><button class="hi" onclick="go('ch')">&#x1F4CA; 学习曲线</button><div class="hi">&#x2B50; <span id="ts">0</span> &#x661F;&#x661F;</div><div class="hi">&#x1F4DA; <span id="tw">0</span> &#x5DF2;&#x638C;&#x63E1;</div></div>
   <div class="gg" id="gg"></div>
 </div>
 
@@ -232,6 +234,22 @@ body {
   <div class="md" id="md"></div>
   <button class="mb" id="mbtn" onclick="cM()">&#x7EE7;&#x7EED;&#x5192;&#x9669; &#x1F680;</button>
 </div></div>
+
+<!-- wrong -->
+<div class="pg" id="wr" style="padding:20px;min-height:100vh;">
+  <div class="bar"><button class="bk" onclick="go('l')">&#x2190;</button><div style="font-size:17px;font-weight:800;color:var(--p);">&#x274E;&#x8BCD;&#x672C;</div><div></div>
+  <div id="wrl" style="width:100%;max-width:500px;margin-top:16px;"></div>
+  <button class="mb" style="margin-top:20px;" onclick="go('l')">&#x7EE7;&#x7EED;&#x5173;&#x95AD;</button>
+</div>
+
+<!-- chart -->
+<div class="pg" id="ch" style="padding:20px;min-height:100vh;">
+  <div class="bar"><button class="bk" onclick="go('h')">&#x2190;</button><div style="font-size:17px;font-weight:800;color:var(--p);">&#x1F4CA; 学习曲线</div><div></div>
+  <div style="width:100%;max-width:500px;margin-top:20px;">
+    <canvas id="chartCanvas"></canvas>
+  </div>
+  <button class="mb" style="margin-top:20px;" onclick="go('h')">&#x1F3E0; &#x8FD4;&#x56DE;&#x9996;</button>
+</div>
 
 <script>
 function speak(en){
@@ -4921,6 +4939,7 @@ let S = {
   L: JSON.parse(localStorage.getItem("L") || "{}"),
   sk: parseInt(localStorage.getItem("sk") || "0"),
   ld: localStorage.getItem("ld") || "",
+  wrong: JSON.parse(localStorage.getItem("wrong") || "[]"),
 };
 
 
@@ -4940,11 +4959,70 @@ function save(){
   localStorage.setItem('L', JSON.stringify(S.L));
   localStorage.setItem('sk', String(S.sk));
   localStorage.setItem('ld', S.ld);
+  localStorage.setItem('wrong', JSON.stringify(S.wrong));
+  // 存每日星星数
+  var tk = new Date().toISOString().slice(0,10);
+  var d = JSON.parse(localStorage.getItem('daily') || '{}');
+  d[tk] = (d[tk] || 0) + 1;
+  localStorage.setItem('daily', JSON.stringify(d));
 }
 
 function key(){ return String(S.grade)+'_'+String(S.uid); }
 
 // ============ 导航 ============
+
+function renderWrong(){
+  var wl = document.getElementById('wrl');
+  wl.innerHTML = '';
+  if(S.wrong.length === 0){
+    wl.innerHTML = '<div style="text-align:center;color:var(--m);padding:40px;">还没有错词哦～继续加油！</div>';
+    return;
+  }
+  S.wrong.forEach(function(w){
+    var d = document.createElement('div');
+    d.style = 'background:var(--c);border-radius:var(--r);padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;';
+    d.innerHTML = '<span style="font-size:28px;">' + w.emoji + '</span>'
+      + '<div><div style="font-weight:700;font-size:16px;color:var(--t);">' + w.en + '</div>'
+      + '<div style="font-size:13px;color:var(--m);">' + w.cn + '</div>'
+      + '<div style="font-size:11px;color:var(--s);">' + w.type + '</div></div>';
+    wl.appendChild(d);
+  });
+}
+
+function renderChart(){
+  var ctx = document.getElementById('chartCanvas').getContext('2d');
+  // 从 localStorage 读取每日星星数
+  var daily = JSON.parse(localStorage.getItem('daily') || '{}');
+  var labels = Object.keys(daily).slice(-7);
+  var values = labels.map(function(d){ return daily[d] || 0; });
+  
+  // 如果没数据，显示提示
+  if(labels.length === 0){
+    document.getElementById('chartCanvas').style.display = 'none';
+    ctx.canvas.parentNode.innerHTML += '<div style="text-align:center;color:var(--m);padding:40px;">还没有学习数据哦～开始学习吧！</div>';
+    return;
+  }
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '每日星星数',
+        data: values,
+        borderColor: '#6C5CE7',
+        backgroundColor: 'rgba(108,92,231,0.1)',
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
 function go(pid){
   document.querySelectorAll('.pg').forEach(function(p){ p.classList.remove('show'); });
   var el = document.getElementById(pid);
@@ -4957,6 +5035,8 @@ function go(pid){
   if(pid==='q') renderQuiz();
   if(pid==='sk') renderSpeak();
   if(pid==='x') renderSpell();
+  if(pid==='wr') renderWrong();
+  if(pid==='ch') renderChart();
 }
 
 // ============ 背景粒子 ============
@@ -5170,6 +5250,8 @@ function handleQuiz(sel, btn){
   } else {
     btn.classList.add('n');
     for(var i=0;i<all.length;i++){ if(all[i].textContent === w.cn) all[i].classList.add('y'); }
+    // 加入错词本
+    S.wrong.push({en:w.en, cn:w.cn, type:'quiz'});
   }
   setTimeout(function(){
     S.qi++;
@@ -5280,6 +5362,8 @@ function cS(){
     document.getElementById('xi').className = 'xi n';
     r.textContent = '❌ 正确答案是：'+w.en+' '+w.emoji;
     r.style.color = 'var(--danger)';
+    // 加入错词本
+    S.wrong.push({en:w.en, cn:w.cn, type:'spell'});
   }
   setTimeout(function(){
     S.xi++;
