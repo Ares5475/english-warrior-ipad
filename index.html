@@ -1,0 +1,5355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>英语小勇士</title>
+<style>
+:root {
+  --p: #6C5CE7;
+  --pl: #a29bfe;
+  --s: #00cec9;
+  --d: #ff7675;
+  --bg: #f8f9ff;
+  --c: #ffffff;
+  --t: #2d3436;
+  --m: #636e72;
+  --r: 20px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background: var(--bg);
+  color: var(--t);
+  min-height: 100vh;
+  overflow-x: hidden;
+  margin: 0;
+}
+
+.bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+.p { position: absolute; border-radius: 50%; opacity: 0.12; animation: fu linear infinite; }
+@keyframes fu { 0% { transform: translateY(100vh) scale(0); opacity: 0; } 10% { opacity: 0.15; } 90% { opacity: 0.15; } 100% { transform: translateY(-10vh) scale(1); opacity: 0; } }
+
+.pg { display: none; flex-direction: column; align-items: center; padding: 20px; min-height: 100vh; position: relative; z-index: 1; }
+.pg.show { display: flex; }
+
+.bar { width: 100%; max-width: 500px; display: flex; align-items: center; justify-content: space-between; padding: 10px 0; margin-bottom: 14px; }
+.bk { background: none; border: none; font-size: 26px; cursor: pointer; color: var(--p); padding: 4px 8px; border-radius: 12px; }
+.bk:hover { background: rgba(108,92,231,0.1); }
+
+.hd { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 18px; width: 100%; max-width: 500px; }
+.hi { background: var(--c); border-radius: 14px; padding: 8px 16px; display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+
+.gg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%; max-width: 500px; margin-top: 16px; }
+.gc { background: var(--c); border-radius: var(--r); padding: 22px 10px; text-align: center; cursor: pointer; box-shadow: 0 4px 24px rgba(108,92,231,0.1); transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); border: 3px solid transparent; position: relative; overflow: hidden; }
+.gc::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--p), var(--s)); border-radius: 20px 20px 0 0; }
+.gc:active { transform: translateY(-2px) scale(1.01); }
+.ge { font-size: 44px; display: block; margin-bottom: 6px; }
+.gn { font-size: 17px; font-weight: 800; color: var(--p); }
+.gs { font-size: 12px; color: var(--m); margin-top: 3px; }
+
+.ul { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+.uc { background: var(--c); border-radius: var(--r); padding: 18px; cursor: pointer; box-shadow: 0 2px 16px rgba(0,0,0,0.05); transition: all 0.25s; display: flex; align-items: center; gap: 14px; border-left: 5px solid var(--p); }
+.uc:hover { transform: translateX(5px); box-shadow: 0 6px 24px rgba(108,92,231,0.12); }
+.un { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, var(--p), var(--pl)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; flex-shrink: 0; }
+.ui { flex: 1; } .ut { font-size: 15px; font-weight: 700; } .up { font-size: 12px; color: var(--m); margin-top: 3px; }
+.pb { width: 100%; height: 8px; background: #eee; border-radius: 8px; margin-top: 6px; overflow: hidden; }
+.pf { height: 100%; border-radius: 8px; background: linear-gradient(90deg, var(--s), #55efc4); transition: width 0.5s; }
+.us { font-size: 16px; white-space: nowrap; }
+
+.lg { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; max-width: 500px; margin-top: 10px; }
+.lc { background: var(--c); border-radius: var(--r); padding: 28px 18px; min-height: 90px; } text-align: center; cursor: pointer; box-shadow: 0 4px 24px rgba(108,92,231,0.1); transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); border: 3px solid #eee; }
+.lc:hover { transform: translateY(-4px) scale(1.02); }
+.lc.x { opacity: 0.45; cursor: not-allowed; filter: grayscale(0.5); }
+.li { font-size: 40px; display: block; margin-bottom: 6px; }
+.ln { font-size: 14px; font-weight: 700; } .ld { font-size: 11px; color: var(--m); margin-top: 3px; }
+.ls { font-size: 18px; margin-top: 6px; }
+
+.ca { width: 100%; max-width: 500px; perspective: 800px; margin-top: 16px; }
+.fc { width: 100%; aspect-ratio: 4/3; border-radius: 24px; box-shadow: 0 10px 36px rgba(108,92,231,0.18); cursor: pointer; position: relative; transition: transform 0.5s; transform-style: preserve-3d; }
+.fc.f { transform: rotateY(180deg); }
+.cf, .cb { position: absolute; width: 100%; height: 100%; border-radius: 24px; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+.cf { background: linear-gradient(135deg, var(--p), var(--pl)); color: #fff; }
+.cb { background: #fff; color: var(--t); transform: rotateY(180deg); border: 3px solid var(--p); }
+.ce { font-size: 38px; font-weight: 900; }
+.cp { font-size: 16px; opacity: 0.7; margin-top: 6px; }
+.cc { font-size: 28px; font-weight: 700; color: var(--p); }
+.ci { font-size: 64px; margin-bottom: 10px; }
+.ch { font-size: 12px; color: var(--m); margin-top: 14px; }
+.cn { display: flex; gap: 14px; margin-top: 18px; width: 100%; max-width: 500px; }
+.cn button { flex: 1; padding: 18px; font-size: 17px; min-height: 50px; } border-radius: 14px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.bs { background: linear-gradient(135deg, var(--s), #55efc4); color: #fff; }
+.bn { background: linear-gradient(135deg, var(--p), var(--pl)); color: #fff; }
+.cn button:active { transform: scale(0.95); }
+
+.qa { width: 100%; max-width: 500px; margin-top: 10px; }
+.qw { font-size: 26px; font-weight: 900; color: var(--p); text-align: center; }
+.qh { text-align: center; color: var(--m); margin: 6px 0 18px; font-size: 13px; }
+.qo { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.qb { padding: 18px 12px; border-radius: 14px; border: 3px solid #eee; background: #fff; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; }
+.qb:hover { border-color: var(--p); }
+.qb.y { border-color: var(--s); background: rgba(0,206,201,0.1); animation: cp 0.3s; }
+.qb.n { border-color: var(--d); background: rgba(255,118,117,0.1); animation: sh 0.3s; }
+@keyframes cp { 0% { transform: scale(1); } 50% { transform: scale(1.06); } 100% { transform: scale(1); } }
+@keyframes sh { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.qp { margin-top: 18px; text-align: center; font-size: 13px; color: var(--m); }
+
+.sa { width: 100%; max-width: 500px; margin-top: 10px; text-align: center; }
+.sw { font-size: 44px; font-weight: 900; color: var(--p); }
+.sp { font-size: 16px; color: var(--m); margin: 6px 0 20px; }
+.sb { width: 90px; height: 90px; border-radius: 50%; border: none; font-size: 40px; cursor: pointer; margin: 14px auto; display: block; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 6px 24px rgba(0,206,201,0.25); }
+.sb.i { background: linear-gradient(135deg, var(--s), #55efc4); }
+.sb.r { background: linear-gradient(135deg, var(--d), #fd79a8); animation: pl 1s ease-in-out infinite; }
+@keyframes pl { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+.sc { font-size: 64px; font-weight: 900; margin: 14px 0; transition: all 0.4s; }
+.sc.g { color: var(--s); } .sc.o { color: #e17055; } .sc.r { color: var(--d); }
+.ss { font-size: 36px; margin: 8px 0; }
+.sf { font-size: 18px; font-weight: 700; margin: 10px 0; padding: 10px 20px; border-radius: 14px; display: inline-block; animation: fu2 0.3s; }
+@keyframes fu2 { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
+
+.xa { width: 100%; max-width: 500px; margin-top: 10px; text-align: center; }
+.xh { font-size: 15px; color: var(--m); margin-bottom: 6px; }
+.xp { font-size: 16px; color: var(--p); margin-bottom: 3px; }
+.xc { font-size: 22px; font-weight: 700; color: var(--t); margin-bottom: 16px; }
+.xi { width: 100%; padding: 14px; border-radius: 14px; border: 3px solid #eee; font-size: 22px; text-align: center; font-weight: 700; outline: none; letter-spacing: 3px; transition: all 0.3s; }
+.xi:focus { border-color: var(--p); box-shadow: 0 0 0 3px rgba(108,92,231,0.12); }
+.xi.y { border-color: var(--s); background: rgba(0,206,201,0.05); }
+.xi.n { border-color: var(--d); background: rgba(255,118,117,0.05); }
+.xb { margin-top: 14px; padding: 14px 44px; border-radius: 14px; border: none; background: linear-gradient(135deg, var(--p), var(--pl)); color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.xb:active { transform: scale(0.95); }
+
+.ov { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 100; animation: fi 0.2s; }
+@keyframes fi { 0% { opacity: 0; } 100% { opacity: 1; } }
+.mo { background: #fff; border-radius: 26px; padding: 36px 28px; text-align: center; max-width: 340px; width: 88%; animation: pi 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes pi { 0% { transform: scale(0.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+.ms { font-size: 56px; margin: 12px 0; }
+.mt { font-size: 26px; font-weight: 900; color: var(--p); }
+.md { font-size: 15px; color: var(--m); margin: 6px 0 20px; }
+.mb { padding: 12px 36px; border-radius: 14px; border: none; background: linear-gradient(135deg, var(--p), var(--pl)); color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.mb:active { transform: scale(0.95); }
+
+#cf { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+
+.st { font-size: 13px; color: var(--m); margin-top: 8px; }
+
+@media (max-width: 500px) { .gg { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+
+<div class="bg" id="bg"></div>
+<canvas id="cf"></canvas>
+
+<!-- welcome -->
+<div class="pg show" id="w">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 20px;">
+    <div style="font-size:88px;animation:bk 2s ease-in-out infinite alternate;">&#x1F3AE;</div>
+    <style>@keyframes bk { 0% { transform: translateY(0); } 100% { transform: translateY(-16px); } }</style>
+    <h1 style="font-size:32px;font-weight:900;color:var(--p);margin:12px 0 6px;">&#x82F1;&#x8BED;&#x5C0F;&#x52C7;&#x58EB;</h1>
+    <p style="font-size:15px;color:var(--m);margin-bottom:28px;">&#x95EF;&#x5173;&#x5B66;&#x82F1;&#x8BED;&#xFF0C;&#x8D8A;&#x73A9;&#x8D8A;&#x5389;&#x5BB3;&#xFF01;</p>
+    <button onclick="go('h')" style="padding:16px 56px;border-radius:18px;border:none;background:linear-gradient(135deg,var(--p),var(--pl));color:#fff;font-size:19px;font-weight:800;cursor:pointer;box-shadow:0 6px 26px rgba(108,92,231,0.3);transition:all 0.2s;" onmouseover="this.style.transform='scale(1.04)'" onmouseout="this.style.transform='scale(1)'">&#x1F680; &#x5F00;&#x59CB;&#x5192;&#x9669;</button>
+    <div style="margin-top:28px;font-size:13px;color:var(--m);">&#x1F525; &#x5DF2;&#x6709; <strong id="ws">0</strong> &#x5929;&#x8FDE;&#x7EED;&#x5B66;&#x4E60;&#xFF01;</div>
+  </div>
+</div>
+
+<!-- home -->
+<div class="pg" id="h">
+  <div class="bar"><div></div><div id="sb" style="display:none;background:linear-gradient(135deg,var(--d),#fd79a8);color:#fff;border-radius:16px;padding:5px 12px;font-weight:800;font-size:13px;">&#x1F525; <span id="sd">0</span> &#x5929;</div></div>
+  <h2 style="font-size:22px;font-weight:900;color:var(--p);">&#x9009;&#x62E9;&#x4F60;&#x7684;&#x5E74;&#x7EA7;</h2>
+  <p style="color:var(--m);margin-bottom:6px;font-size:14px;">&#x6210;&#x4E3A;&#x82F1;&#x8BED;&#x5C0F;&#x52C7;&#x58EB;&#xFF01;</p>
+  <div class="hd"><div class="hi">&#x2B50; <span id="ts">0</span> &#x661F;&#x661F;</div><div class="hi">&#x1F4DA; <span id="tw">0</span> &#x5DF2;&#x638C;&#x63E1;</div></div>
+  <div class="gg" id="gg"></div>
+</div>
+
+<!-- units -->
+<div class="pg" id="u">
+  <div class="bar"><button class="bk" onclick="go('h')">&#x2190;</button><div style="font-weight:800;font-size:17px;color:var(--p);" id="ut"></div><div></div></div>
+  <div class="ul" id="ul"></div>
+</div>
+
+<!-- levels -->
+<div class="pg" id="l">
+  <div class="bar"><button class="bk" onclick="go('u')">&#x2190;</button><div style="font-weight:800;font-size:17px;color:var(--p);" id="lt"></div><div id="ls" style="font-size:14px;"></div></div>
+  <div class="lg" id="lg"></div>
+</div>
+
+<!-- cards -->
+<div class="pg" id="c">
+  <div class="bar"><button class="bk" onclick="go('l')">&#x2715;</button><div style="font-size:13px;color:var(--m);">&#x7B2C;1&#x5173;&#xFF1A;&#x8BA4;&#x8BC6;&#x5355;&#x8BCD;</div><div style="font-size:13px;font-weight:700;color:var(--p);" id="cp">0/0</div></div>
+  <div class="ca"><div class="fc" id="fc" onclick="fl()">
+    <div class="cf"><div class="ci" id="fei"></div><div class="ce" id="fen"></div><div class="cp" id="fep"></div><div class="ch">&#x1F449; &#x70B9;&#x51FB;&#x5361;&#x7247;&#x770B;&#x4E2D;&#x6587;&#x610F;&#x601D;</div></div>
+    <div class="cb"><div class="ci" id="bei"></div><div class="cc" id="bcn"></div><div class="ce" style="font-size:20px;color:var(--pl);margin-top:6px;" id="ben"></div><div class="ch">&#x1F449; &#x70B9;&#x51FB;&#x56DE;&#x5230;&#x82F1;&#x6587;&#x9762;</div></div>
+  </div></div>
+  <button class="bs" style="margin-top:14px;width:100%;max-width:500px;" onclick="spk()">&#x1F50A; &#x542C;&#x53D1;&#x97F3;</button>
+  <div class="cn"><button class="bn" onclick="pc()">&#x2B05; &#x4E0A;&#x4E00;&#x4E2A;</button><button class="bn" onclick="nc()">&#x4E0B;&#x4E00;&#x4E2A; &#x27A1;</button></div>
+  <div style="margin-top:16px;"><button class="mb" id="finBtn" style="display:none;" onclick="fL1()">&#x2B50; &#x5B8C;&#x6210;&#x7B2C;1&#x5173;&#xFF01;</button></div>
+</div>
+
+<!-- quiz -->
+<div class="pg" id="q">
+  <div class="bar"><button class="bk" onclick="go('l')">&#x2715;</button><div style="font-size:13px;color:var(--m);">&#x7B2C;2&#x5173;&#xFF1A;&#x542C;&#x529B;&#x6311;&#x6218;</div><div style="font-size:13px;font-weight:700;" id="ql">1/5</div></div>
+  <div class="qa">
+    <div style="margin:10px 0;"><button onclick="pQ()" style="padding:14px 28px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--p),var(--pl));font-size:32px;cursor:pointer;box-shadow:0 4px 18px rgba(108,92,231,0.25);">&#x1F50A;</button></div>
+    <div class="qh">&#x70B9;&#x51FB;&#x1F50A;&#x542C;&#x53D1;&#x97F3;&#xFF0C;&#x9009;&#x51FA;&#x6B63;&#x786E;&#x610F;&#x601D;</div>
+    <div class="qo" id="qo"></div>
+    <div class="qp"><div style="height:6px;background:#eee;border-radius:6px;margin-top:14px;"><div id="qp" style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--s),#55efc4);width:0;transition:width 0.4s;"></div></div></div>
+  </div>
+</div>
+
+<!-- speak -->
+<div class="pg" id="sk">
+  <div class="bar"><button class="bk" onclick="go('l')">&#x2715;</button><div style="font-size:13px;color:var(--m);">&#x7B2C;3&#x5173;&#xFF1A;&#x8DDF;&#x8BFB;&#x6311;&#x6218;</div><div style="font-size:13px;font-weight:700;" id="sl">1/5</div></div>
+  <div class="sa">
+    <div class="sw" id="sw"></div>
+    <div class="sp" id="sph"></div>
+    <button class="sb i" id="sbtn" onclick="tR()">&#x1F3A4;</button>
+    <div class="sc" id="sc"></div>
+    <div class="ss" id="ss"></div>
+    <div class="sf" id="sf"></div>
+    <button class="xb" style="margin-top:12px;" onclick="nS()">&#x4E0B;&#x4E00;&#x4E2A; &#x27A1;</button>
+  </div>
+</div>
+
+<!-- spell -->
+<div class="pg" id="x">
+  <div class="bar"><button class="bk" onclick="go('l')">&#x2715;</button><div style="font-size:13px;color:var(--m);">&#x7B2C;4&#x5173;&#xFF1A;&#x62FC;&#x5199;Boss</div><div style="font-size:13px;font-weight:700;" id="xl">1/5</div></div>
+  <div class="xa">
+    <div class="xh">&#x542C;&#x53D1;&#x97F3;&#xFF0C;&#x62FC;&#x5199;&#x51FA;&#x5355;&#x8BCD;&#xFF1A;</div>
+    <button onclick="pS()" style="margin:10px auto;padding:12px 24px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--s),#55efc4);font-size:28px;cursor:pointer;box-shadow:0 4px 18px rgba(0,206,201,0.25);">&#x1F50A;</button>
+    <div class="xp" id="xph"></div>
+    <div class="xc" id="xcn"></div>
+    <input class="xi" id="xi" type="text" placeholder="&#x8F93;&#x5165;&#x82F1;&#x6587;&#x5355;&#x8BCD;..." autocomplete="off" onkeydown="if(event.key==='Enter')cS()" style="text-transform:lowercase;">
+    <button class="xb" onclick="cS()">&#x2705; &#x786E;&#x8BA4;</button>
+    <div id="xr" style="margin-top:10px;font-size:15px;font-weight:700;"></div>
+    <div style="margin-top:14px;"><div style="height:6px;background:#eee;border-radius:6px;"><div id="xpb" style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--p),var(--pl));width:0;transition:width 0.4s;"></div></div></div>
+  </div>
+</div>
+
+<!-- modal -->
+<div class="ov" id="ov" style="display:none;"><div class="mo">
+  <div class="ms" id="ms"></div>
+  <div class="mt" id="mt"></div>
+  <div class="md" id="md"></div>
+  <button class="mb" id="mbtn" onclick="cM()">&#x7EE7;&#x7EED;&#x5192;&#x9669; &#x1F680;</button>
+</div></div>
+
+<script>
+
+
+const VOCAB = {
+  "3_上册": [
+    {
+      "unit": "Unit 1",
+      "title": "Greeting",
+      "words": [
+        {
+          "en": "hello",
+          "cn": "你好",
+          "emoji": "👋",
+          "ph": "/həˈləʊ/"
+        },
+        {
+          "en": "hi",
+          "cn": "嗨",
+          "emoji": "😊",
+          "ph": "/haɪ/"
+        },
+        {
+          "en": "I",
+          "cn": "我",
+          "emoji": "🙋",
+          "ph": "/aɪ/"
+        },
+        {
+          "en": "am",
+          "cn": "是",
+          "emoji": "✅",
+          "ph": "/æm/"
+        },
+        {
+          "en": "goodbye",
+          "cn": "再见",
+          "emoji": "👋",
+          "ph": "/ɡʊdˈbaɪ/"
+        },
+        {
+          "en": "bye",
+          "cn": "再见",
+          "emoji": "👋",
+          "ph": "/baɪ/"
+        },
+        {
+          "en": "name",
+          "cn": "名字",
+          "emoji": "📛",
+          "ph": "/neɪm/"
+        },
+        {
+          "en": "your",
+          "cn": "你的",
+          "emoji": "👤",
+          "ph": "/jɔː/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "Colors",
+      "words": [
+        {
+          "en": "red",
+          "cn": "红色",
+          "emoji": "🔴",
+          "ph": "/red/"
+        },
+        {
+          "en": "blue",
+          "cn": "蓝色",
+          "emoji": "🔵",
+          "ph": "/bluː/"
+        },
+        {
+          "en": "yellow",
+          "cn": "黄色",
+          "emoji": "🟡",
+          "ph": "/ˈjeləʊ/"
+        },
+        {
+          "en": "green",
+          "cn": "绿色",
+          "emoji": "🟢",
+          "ph": "/ɡriːn/"
+        },
+        {
+          "en": "black",
+          "cn": "黑色",
+          "emoji": "⚫",
+          "ph": "/blæk/"
+        },
+        {
+          "en": "white",
+          "cn": "白色",
+          "emoji": "⚪",
+          "ph": "/waɪt/"
+        },
+        {
+          "en": "orange",
+          "cn": "橙色",
+          "emoji": "🟠",
+          "ph": "/ˈɒrɪndʒ/"
+        },
+        {
+          "en": "brown",
+          "cn": "棕色",
+          "emoji": "🟤",
+          "ph": "/braʊn/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "Body",
+      "words": [
+        {
+          "en": "head",
+          "cn": "头",
+          "emoji": "🗣️",
+          "ph": "/hed/"
+        },
+        {
+          "en": "face",
+          "cn": "脸",
+          "emoji": "😊",
+          "ph": "/feɪs/"
+        },
+        {
+          "en": "nose",
+          "cn": "鼻子",
+          "emoji": "👃",
+          "ph": "/nəʊz/"
+        },
+        {
+          "en": "mouth",
+          "cn": "嘴",
+          "emoji": "👄",
+          "ph": "/maʊθ/"
+        },
+        {
+          "en": "eye",
+          "cn": "眼睛",
+          "emoji": "👁️",
+          "ph": "/aɪ/"
+        },
+        {
+          "en": "ear",
+          "cn": "耳朵",
+          "emoji": "👂",
+          "ph": "/ɪə/"
+        },
+        {
+          "en": "hand",
+          "cn": "手",
+          "emoji": "✋",
+          "ph": "/hænd/"
+        },
+        {
+          "en": "foot",
+          "cn": "脚",
+          "emoji": "🦶",
+          "ph": "/fʊt/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "Animals",
+      "words": [
+        {
+          "en": "dog",
+          "cn": "狗",
+          "emoji": "🐶",
+          "ph": "/dɒɡ/"
+        },
+        {
+          "en": "cat",
+          "cn": "猫",
+          "emoji": "🐱",
+          "ph": "/kæt/"
+        },
+        {
+          "en": "duck",
+          "cn": "鸭子",
+          "emoji": "🦆",
+          "ph": "/dʌk/"
+        },
+        {
+          "en": "pig",
+          "cn": "猪",
+          "emoji": "🐷",
+          "ph": "/pɪɡ/"
+        },
+        {
+          "en": "bear",
+          "cn": "熊",
+          "emoji": "🐻",
+          "ph": "/beə/"
+        },
+        {
+          "en": "bird",
+          "cn": "鸟",
+          "emoji": "🐦",
+          "ph": "/bɜːd/"
+        },
+        {
+          "en": "elephant",
+          "cn": "大象",
+          "emoji": "🐘",
+          "ph": "/ˈelɪfənt/"
+        },
+        {
+          "en": "monkey",
+          "cn": "猴子",
+          "emoji": "🐒",
+          "ph": "/ˈmʌŋki/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "Food",
+      "words": [
+        {
+          "en": "cake",
+          "cn": "蛋糕",
+          "emoji": "🎂",
+          "ph": "/keɪk/"
+        },
+        {
+          "en": "bread",
+          "cn": "面包",
+          "emoji": "🍞",
+          "ph": "/bred/"
+        },
+        {
+          "en": "milk",
+          "cn": "牛奶",
+          "emoji": "🥛",
+          "ph": "/mɪlk/"
+        },
+        {
+          "en": "water",
+          "cn": "水",
+          "emoji": "💧",
+          "ph": "/ˈwɔːtə/"
+        },
+        {
+          "en": "juice",
+          "cn": "果汁",
+          "emoji": "🧃",
+          "ph": "/dʒuːs/"
+        },
+        {
+          "en": "egg",
+          "cn": "鸡蛋",
+          "emoji": "🥚",
+          "ph": "/eɡ/"
+        },
+        {
+          "en": "rice",
+          "cn": "米饭",
+          "emoji": "🍚",
+          "ph": "/raɪs/"
+        },
+        {
+          "en": "fish",
+          "cn": "鱼",
+          "emoji": "🐟",
+          "ph": "/fɪʃ/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "Numbers",
+      "words": [
+        {
+          "en": "one",
+          "cn": "一",
+          "emoji": "1️⃣",
+          "ph": "/wʌn/"
+        },
+        {
+          "en": "two",
+          "cn": "二",
+          "emoji": "2️⃣",
+          "ph": "/tuː/"
+        },
+        {
+          "en": "three",
+          "cn": "三",
+          "emoji": "3️⃣",
+          "ph": "/θriː/"
+        },
+        {
+          "en": "four",
+          "cn": "四",
+          "emoji": "4️⃣",
+          "ph": "/fɔː/"
+        },
+        {
+          "en": "five",
+          "cn": "五",
+          "emoji": "5️⃣",
+          "ph": "/faɪv/"
+        },
+        {
+          "en": "six",
+          "cn": "六",
+          "emoji": "6️⃣",
+          "ph": "/sɪks/"
+        },
+        {
+          "en": "seven",
+          "cn": "七",
+          "emoji": "7️⃣",
+          "ph": "/ˈsevən/"
+        },
+        {
+          "en": "eight",
+          "cn": "八",
+          "emoji": "8️⃣",
+          "ph": "/eɪt/"
+        },
+        {
+          "en": "nine",
+          "cn": "九",
+          "emoji": "9️⃣",
+          "ph": "/naɪn/"
+        },
+        {
+          "en": "ten",
+          "cn": "十",
+          "emoji": "🔟",
+          "ph": "/ten/"
+        }
+      ]
+    }
+  ],
+  "3_下册": [
+    {
+      "unit": "Unit 1",
+      "title": "Welcome back",
+      "words": [
+        {
+          "en": "UK",
+          "cn": "英国",
+          "emoji": "🇬🇧",
+          "ph": "/juːˈkeɪ/"
+        },
+        {
+          "en": "Canada",
+          "cn": "加拿大",
+          "emoji": "🇨🇦",
+          "ph": "/ˈkænədə/"
+        },
+        {
+          "en": "USA",
+          "cn": "美国",
+          "emoji": "🇺🇸",
+          "ph": "/juːesˈeɪ/"
+        },
+        {
+          "en": "China",
+          "cn": "中国",
+          "emoji": "🇨🇳",
+          "ph": "/ˈtʃaɪnə/"
+        },
+        {
+          "en": "pupil",
+          "cn": "小学生",
+          "emoji": "👦",
+          "ph": "/ˈpjuːpəl/"
+        },
+        {
+          "en": "teacher",
+          "cn": "老师",
+          "emoji": "👩🏫",
+          "ph": "/ˈtiːtʃə/"
+        },
+        {
+          "en": "student",
+          "cn": "学生",
+          "emoji": "🧑🎓",
+          "ph": "/ˈstjuːdənt/"
+        },
+        {
+          "en": "friend",
+          "cn": "朋友",
+          "emoji": "🤝",
+          "ph": "/frend/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "Family",
+      "words": [
+        {
+          "en": "father",
+          "cn": "爸爸",
+          "emoji": "👨",
+          "ph": "/ˈfɑːðə/"
+        },
+        {
+          "en": "dad",
+          "cn": "爸爸",
+          "emoji": "👨",
+          "ph": "/dæd/"
+        },
+        {
+          "en": "mother",
+          "cn": "妈妈",
+          "emoji": "👩",
+          "ph": "/ˈmʌðə/"
+        },
+        {
+          "en": "mum",
+          "cn": "妈妈",
+          "emoji": "👩",
+          "ph": "/mʌm/"
+        },
+        {
+          "en": "man",
+          "cn": "男人",
+          "emoji": "👨",
+          "ph": "/mæn/"
+        },
+        {
+          "en": "woman",
+          "cn": "女人",
+          "emoji": "👩",
+          "ph": "/ˈwʊmən/"
+        },
+        {
+          "en": "sister",
+          "cn": "姐妹",
+          "emoji": "👧",
+          "ph": "/ˈsɪstə/"
+        },
+        {
+          "en": "brother",
+          "cn": "兄弟",
+          "emoji": "👦",
+          "ph": "/ˈbrʌðə/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "At the zoo",
+      "words": [
+        {
+          "en": "thin",
+          "cn": "瘦的",
+          "emoji": "🦒",
+          "ph": "/θɪn/"
+        },
+        {
+          "en": "fat",
+          "cn": "胖的",
+          "emoji": "🐷",
+          "ph": "/fæt/"
+        },
+        {
+          "en": "tall",
+          "cn": "高的",
+          "emoji": "🦒",
+          "ph": "/tɔːl/"
+        },
+        {
+          "en": "short",
+          "cn": "矮的",
+          "emoji": "🐶",
+          "ph": "/ʃɔːt/"
+        },
+        {
+          "en": "long",
+          "cn": "长的",
+          "emoji": "📏",
+          "ph": "/lɒŋ/"
+        },
+        {
+          "en": "small",
+          "cn": "小的",
+          "emoji": "🔍",
+          "ph": "/smɔːl/"
+        },
+        {
+          "en": "big",
+          "cn": "大的",
+          "emoji": "🐘",
+          "ph": "/bɪɡ/"
+        },
+        {
+          "en": "giraffe",
+          "cn": "长颈鹿",
+          "emoji": "🦒",
+          "ph": "/dʒɪˈrɑːf/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "Where is my car?",
+      "words": [
+        {
+          "en": "in",
+          "cn": "在...里",
+          "emoji": "📥",
+          "ph": "/ɪn/"
+        },
+        {
+          "en": "on",
+          "cn": "在...上",
+          "emoji": "📤",
+          "ph": "/ɒn/"
+        },
+        {
+          "en": "under",
+          "cn": "在...下面",
+          "emoji": "⬇️",
+          "ph": "/ˈʌndə/"
+        },
+        {
+          "en": "chair",
+          "cn": "椅子",
+          "emoji": "🪑",
+          "ph": "/tʃeə/"
+        },
+        {
+          "en": "desk",
+          "cn": "书桌",
+          "emoji": "📚",
+          "ph": "/desk/"
+        },
+        {
+          "en": "cap",
+          "cn": "帽子",
+          "emoji": "🧢",
+          "ph": "/kæp/"
+        },
+        {
+          "en": "ball",
+          "cn": "球",
+          "emoji": "⚽",
+          "ph": "/bɔːl/"
+        },
+        {
+          "en": "car",
+          "cn": "汽车",
+          "emoji": "🚗",
+          "ph": "/kɑː/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "Do you like pears?",
+      "words": [
+        {
+          "en": "apple",
+          "cn": "苹果",
+          "emoji": "🍎",
+          "ph": "/ˈæpəl/"
+        },
+        {
+          "en": "pear",
+          "cn": "梨",
+          "emoji": "🍐",
+          "ph": "/peə/"
+        },
+        {
+          "en": "orange",
+          "cn": "橙子",
+          "emoji": "🍊",
+          "ph": "/ˈɒrɪndʒ/"
+        },
+        {
+          "en": "banana",
+          "cn": "香蕉",
+          "emoji": "🍌",
+          "ph": "/bəˈnɑːnə/"
+        },
+        {
+          "en": "watermelon",
+          "cn": "西瓜",
+          "emoji": "🍉",
+          "ph": "/ˈwɔːtəmelən/"
+        },
+        {
+          "en": "strawberry",
+          "cn": "草莓",
+          "emoji": "🍓",
+          "ph": "/ˈstrɔːbəri/"
+        },
+        {
+          "en": "grape",
+          "cn": "葡萄",
+          "emoji": "🍇",
+          "ph": "/ɡreɪp/"
+        },
+        {
+          "en": "fruit",
+          "cn": "水果",
+          "emoji": "🍽️",
+          "ph": "/fruːt/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "How many?",
+      "words": [
+        {
+          "en": "eleven",
+          "cn": "十一",
+          "emoji": "1️⃣1️⃣",
+          "ph": "/ɪˈlevən/"
+        },
+        {
+          "en": "twelve",
+          "cn": "十二",
+          "emoji": "1️⃣2️⃣",
+          "ph": "/twelv/"
+        },
+        {
+          "en": "thirteen",
+          "cn": "十三",
+          "emoji": "1️⃣3️⃣",
+          "ph": "/ˌθɜːˈtiːn/"
+        },
+        {
+          "en": "fourteen",
+          "cn": "十四",
+          "emoji": "1️⃣4️⃣",
+          "ph": "/ˌfɔːˈtiːn/"
+        },
+        {
+          "en": "fifteen",
+          "cn": "十五",
+          "emoji": "1️⃣5️⃣",
+          "ph": "/ˌfɪfˈtiːn/"
+        },
+        {
+          "en": "kite",
+          "cn": "风筝",
+          "emoji": "🪁",
+          "ph": "/kaɪt/"
+        },
+        {
+          "en": "beautiful",
+          "cn": "美丽的",
+          "emoji": "🌸",
+          "ph": "/ˈbjuːtɪfəl/"
+        }
+      ]
+    }
+  ],
+  "4_上册": [
+    {
+      "unit": "Unit 1",
+      "title": "My classroom",
+      "words": [
+        {
+          "en": "classroom",
+          "cn": "教室",
+          "emoji": "🏫",
+          "ph": "/ˈklɑːsruːm/"
+        },
+        {
+          "en": "window",
+          "cn": "窗户",
+          "emoji": "🪟",
+          "ph": "/ˈwɪndəʊ/"
+        },
+        {
+          "en": "blackboard",
+          "cn": "黑板",
+          "emoji": "🖍️",
+          "ph": "/ˈblækbɔːd/"
+        },
+        {
+          "en": "light",
+          "cn": "灯",
+          "emoji": "💡",
+          "ph": "/laɪt/"
+        },
+        {
+          "en": "picture",
+          "cn": "图画",
+          "emoji": "🖼️",
+          "ph": "/ˈpɪktʃə/"
+        },
+        {
+          "en": "door",
+          "cn": "门",
+          "emoji": "🚪",
+          "ph": "/dɔː/"
+        },
+        {
+          "en": "teacher's desk",
+          "cn": "讲台",
+          "emoji": "🪑",
+          "ph": "/ˈtiːtʃəz desk/"
+        },
+        {
+          "en": "computer",
+          "cn": "计算机",
+          "emoji": "💻",
+          "ph": "/kəmˈpjuːtə/"
+        },
+        {
+          "en": "fan",
+          "cn": "风扇",
+          "emoji": "🌀",
+          "ph": "/fæn/"
+        },
+        {
+          "en": "wall",
+          "cn": "墙壁",
+          "emoji": "🧱",
+          "ph": "/wɔːl/"
+        },
+        {
+          "en": "floor",
+          "cn": "地板",
+          "emoji": "🟫",
+          "ph": "/flɔː/"
+        },
+        {
+          "en": "really",
+          "cn": "真的",
+          "emoji": "✅",
+          "ph": "/ˈrɪəli/"
+        },
+        {
+          "en": "near",
+          "cn": "靠近",
+          "emoji": "📍",
+          "ph": "/nɪə/"
+        },
+        {
+          "en": "clean",
+          "cn": "打扫",
+          "emoji": "🧹",
+          "ph": "/kliːn/"
+        },
+        {
+          "en": "help",
+          "cn": "帮助",
+          "emoji": "🤝",
+          "ph": "/help/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "My schoolbag",
+      "words": [
+        {
+          "en": "schoolbag",
+          "cn": "书包",
+          "emoji": "🎒",
+          "ph": "/ˈskuːlbæɡ/"
+        },
+        {
+          "en": "maths book",
+          "cn": "数学书",
+          "emoji": "📕",
+          "ph": "/mæθs bʊk/"
+        },
+        {
+          "en": "English book",
+          "cn": "英语书",
+          "emoji": "📗",
+          "ph": "/ˈɪŋɡlɪʃ bʊk/"
+        },
+        {
+          "en": "Chinese book",
+          "cn": "语文书",
+          "emoji": "📘",
+          "ph": "/ˌtʃaɪˈniːz bʊk/"
+        },
+        {
+          "en": "storybook",
+          "cn": "故事书",
+          "emoji": "📖",
+          "ph": "/ˈstɔːribʊk/"
+        },
+        {
+          "en": "candy",
+          "cn": "糖果",
+          "emoji": "🍬",
+          "ph": "/ˈkændi/"
+        },
+        {
+          "en": "notebook",
+          "cn": "笔记本",
+          "emoji": "📓",
+          "ph": "/ˈnəʊtbʊk/"
+        },
+        {
+          "en": "toy",
+          "cn": "玩具",
+          "emoji": "🧸",
+          "ph": "/tɔɪ/"
+        },
+        {
+          "en": "key",
+          "cn": "钥匙",
+          "emoji": "🔑",
+          "ph": "/kiː/"
+        },
+        {
+          "en": "wow",
+          "cn": "哇",
+          "emoji": "😮",
+          "ph": "/waʊ/"
+        },
+        {
+          "en": "lost",
+          "cn": "丢失",
+          "emoji": "😰",
+          "ph": "/lɒst/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "My friends",
+      "words": [
+        {
+          "en": "strong",
+          "cn": "强壮的",
+          "emoji": "💪",
+          "ph": "/strɒŋ/"
+        },
+        {
+          "en": "friendly",
+          "cn": "友好的",
+          "emoji": "😊",
+          "ph": "/ˈfrendli/"
+        },
+        {
+          "en": "quiet",
+          "cn": "安静的",
+          "emoji": "🤫",
+          "ph": "/ˈkwaɪət/"
+        },
+        {
+          "en": "hair",
+          "cn": "头发",
+          "emoji": "💇",
+          "ph": "/heə/"
+        },
+        {
+          "en": "shoe",
+          "cn": "鞋",
+          "emoji": "👟",
+          "ph": "/ʃuː/"
+        },
+        {
+          "en": "glasses",
+          "cn": "眼镜",
+          "emoji": "👓",
+          "ph": "/ˈɡlɑːsɪz/"
+        },
+        {
+          "en": "his",
+          "cn": "他的",
+          "emoji": "👦",
+          "ph": "/hɪz/"
+        },
+        {
+          "en": "or",
+          "cn": "或者",
+          "emoji": "🔀",
+          "ph": "/ɔː/"
+        },
+        {
+          "en": "right",
+          "cn": "对的",
+          "emoji": "✅",
+          "ph": "/raɪt/"
+        },
+        {
+          "en": "hat",
+          "cn": "帽子",
+          "emoji": "🎩",
+          "ph": "/hæt/"
+        },
+        {
+          "en": "her",
+          "cn": "她的",
+          "emoji": "👩",
+          "ph": "/hɜː/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "My home",
+      "words": [
+        {
+          "en": "bedroom",
+          "cn": "卧室",
+          "emoji": "🛏️",
+          "ph": "/ˈbedruːm/"
+        },
+        {
+          "en": "living room",
+          "cn": "客厅",
+          "emoji": "🛋️",
+          "ph": "/ˈlɪvɪŋ ruːm/"
+        },
+        {
+          "en": "study",
+          "cn": "书房",
+          "emoji": "📚",
+          "ph": "/ˈstʌdi/"
+        },
+        {
+          "en": "kitchen",
+          "cn": "厨房",
+          "emoji": "🍳",
+          "ph": "/ˈkɪtʃɪn/"
+        },
+        {
+          "en": "bathroom",
+          "cn": "浴室",
+          "emoji": "🛁",
+          "ph": "/ˈbɑːθruːm/"
+        },
+        {
+          "en": "bed",
+          "cn": "床",
+          "emoji": "🛌",
+          "ph": "/bed/"
+        },
+        {
+          "en": "phone",
+          "cn": "电话",
+          "emoji": "📱",
+          "ph": "/fəʊn/"
+        },
+        {
+          "en": "table",
+          "cn": "桌子",
+          "emoji": "🪑",
+          "ph": "/ˈteɪbl/"
+        },
+        {
+          "en": "sofa",
+          "cn": "沙发",
+          "emoji": "🛋️",
+          "ph": "/ˈsəʊfə/"
+        },
+        {
+          "en": "fridge",
+          "cn": "冰箱",
+          "emoji": "❄️",
+          "ph": "/frɪdʒ/"
+        },
+        {
+          "en": "find",
+          "cn": "找到",
+          "emoji": "🔍",
+          "ph": "/faɪnd/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "Dinner's ready",
+      "words": [
+        {
+          "en": "beef",
+          "cn": "牛肉",
+          "emoji": "🥩",
+          "ph": "/biːf/"
+        },
+        {
+          "en": "chicken",
+          "cn": "鸡肉",
+          "emoji": "🍗",
+          "ph": "/ˈtʃɪkɪn/"
+        },
+        {
+          "en": "noodles",
+          "cn": "面条",
+          "emoji": "🍜",
+          "ph": "/ˈnuːdlz/"
+        },
+        {
+          "en": "soup",
+          "cn": "汤",
+          "emoji": "🍲",
+          "ph": "/suːp/"
+        },
+        {
+          "en": "vegetable",
+          "cn": "蔬菜",
+          "emoji": "🥦",
+          "ph": "/ˈvedʒtəbl/"
+        },
+        {
+          "en": "chopsticks",
+          "cn": "筷子",
+          "emoji": "🥢",
+          "ph": "/ˈtʃɒpstɪks/"
+        },
+        {
+          "en": "bowl",
+          "cn": "碗",
+          "emoji": "🥣",
+          "ph": "/bəʊl/"
+        },
+        {
+          "en": "fork",
+          "cn": "叉子",
+          "emoji": "🍴",
+          "ph": "/fɔːk/"
+        },
+        {
+          "en": "knife",
+          "cn": "刀",
+          "emoji": "🔪",
+          "ph": "/naɪf/"
+        },
+        {
+          "en": "spoon",
+          "cn": "勺子",
+          "emoji": "🥄",
+          "ph": "/spuːn/"
+        },
+        {
+          "en": "dinner",
+          "cn": "晚餐",
+          "emoji": "🍽",
+          "ph": "/ˈdɪnə/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "Meet my family!",
+      "words": [
+        {
+          "en": "family",
+          "cn": "家庭",
+          "emoji": "👨👩👧👦",
+          "ph": "/ˈfæməli/"
+        },
+        {
+          "en": "parents",
+          "cn": "父母",
+          "emoji": "👨👩",
+          "ph": "/ˈpeərənts/"
+        },
+        {
+          "en": "uncle",
+          "cn": "叔叔",
+          "emoji": "👨",
+          "ph": "/ˈʌŋkl/"
+        },
+        {
+          "en": "aunt",
+          "cn": "阿姨",
+          "emoji": "👩",
+          "ph": "/ɑːnt/"
+        },
+        {
+          "en": "baby brother",
+          "cn": "婴儿弟弟",
+          "emoji": "👶",
+          "ph": "/ˈbeɪbi ˈbrʌðə/"
+        },
+        {
+          "en": "doctor",
+          "cn": "医生",
+          "emoji": "👨⚕",
+          "ph": "/ˈdɒktə/"
+        },
+        {
+          "en": "cook",
+          "cn": "厨师",
+          "emoji": "👨🍳",
+          "ph": "/kʊk/"
+        },
+        {
+          "en": "driver",
+          "cn": "司机",
+          "emoji": "🚗",
+          "ph": "/ˈdraɪvə/"
+        },
+        {
+          "en": "farmer",
+          "cn": "农民",
+          "emoji": "👨🌾",
+          "ph": "/ˈfɑːmə/"
+        },
+        {
+          "en": "nurse",
+          "cn": "护士",
+          "emoji": "👩💉",
+          "ph": "/nɜːs/"
+        },
+        {
+          "en": "people",
+          "cn": "人们",
+          "emoji": "👥",
+          "ph": "/ˈpiːpl/"
+        }
+      ]
+    }
+  ],
+  "4_下册": [
+    {
+      "unit": "Unit 1",
+      "title": "My school",
+      "words": [
+        {
+          "en": "first floor",
+          "cn": "一楼",
+          "emoji": "1️⃣",
+          "ph": "/ˌfɜːst flɔː/"
+        },
+        {
+          "en": "second floor",
+          "cn": "二楼",
+          "emoji": "2️⃣",
+          "ph": "/ˈsekənd flɔː/"
+        },
+        {
+          "en": "teachers' office",
+          "cn": "教师办公室",
+          "emoji": "🏢",
+          "ph": "/ˈtiːtʃəz ˈɒfɪs/"
+        },
+        {
+          "en": "library",
+          "cn": "图书馆",
+          "emoji": "📚",
+          "ph": "/ˈlaɪbrəri/"
+        },
+        {
+          "en": "playground",
+          "cn": "操场",
+          "emoji": "🏟",
+          "ph": "/ˈpleɪɡraʊnd/"
+        },
+        {
+          "en": "computer room",
+          "cn": "计算机房",
+          "emoji": "💻",
+          "ph": "/kəmˈpjuːtə ruːm/"
+        },
+        {
+          "en": "art room",
+          "cn": "美术室",
+          "emoji": "🎨",
+          "ph": "/ɑːt ruːm/"
+        },
+        {
+          "en": "music room",
+          "cn": "音乐室",
+          "emoji": "🎵",
+          "ph": "/ˈmjuːzɪk ruːm/"
+        },
+        {
+          "en": "next to",
+          "cn": "靠近",
+          "emoji": "➡️",
+          "ph": "/nekst tuː/"
+        },
+        {
+          "en": "homework",
+          "cn": "作业",
+          "emoji": "📝",
+          "ph": "/ˈhəʊmwɜːk/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "What time is it?",
+      "words": [
+        {
+          "en": "breakfast",
+          "cn": "早餐",
+          "emoji": "🥐",
+          "ph": "/ˈbrekfəst/"
+        },
+        {
+          "en": "English class",
+          "cn": "英语课",
+          "emoji": "🇺🇸",
+          "ph": "/ˈɪŋɡlɪʃ klɑːs/"
+        },
+        {
+          "en": "lunch",
+          "cn": "午餐",
+          "emoji": "🍱",
+          "ph": "/lʌntʃ/"
+        },
+        {
+          "en": "music class",
+          "cn": "音乐课",
+          "emoji": "🎵",
+          "ph": "/ˈmjuːzɪk klɑːs/"
+        },
+        {
+          "en": "PE class",
+          "cn": "体育课",
+          "emoji": "⚽",
+          "ph": "/ˌpiːˈiː klɑːs/"
+        },
+        {
+          "en": "dinner",
+          "cn": "晚餐",
+          "emoji": "🍽",
+          "ph": "/ˈdɪnə/"
+        },
+        {
+          "en": "get up",
+          "cn": "起床",
+          "emoji": "⏰",
+          "ph": "/ɡet ʌp/"
+        },
+        {
+          "en": "go to school",
+          "cn": "去上学",
+          "emoji": "🏫",
+          "ph": "/ɡəʊ tuː skuːl/"
+        },
+        {
+          "en": "go home",
+          "cn": "回家",
+          "emoji": "🏠",
+          "ph": "/ɡəʊ həʊm/"
+        },
+        {
+          "en": "go to bed",
+          "cn": "上床睡觉",
+          "emoji": "🛌",
+          "ph": "/ɡəʊ tuː bed/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "Weather",
+      "words": [
+        {
+          "en": "cold",
+          "cn": "冷的",
+          "emoji": "❄️",
+          "ph": "/kəʊld/"
+        },
+        {
+          "en": "cool",
+          "cn": "凉爽的",
+          "emoji": "🌬️",
+          "ph": "/kuːl/"
+        },
+        {
+          "en": "warm",
+          "cn": "温暖的",
+          "emoji": "🌡️",
+          "ph": "/wɔːm/"
+        },
+        {
+          "en": "hot",
+          "cn": "热的",
+          "emoji": "🔥",
+          "ph": "/hɒt/"
+        },
+        {
+          "en": "sunny",
+          "cn": "晴朗的",
+          "emoji": "☀️",
+          "ph": "/ˈsʌni/"
+        },
+        {
+          "en": "windy",
+          "cn": "有风的",
+          "emoji": "🌪️",
+          "ph": "/ˈwɪndi/"
+        },
+        {
+          "en": "cloudy",
+          "cn": "多云的",
+          "emoji": "☁️",
+          "ph": "/ˈklaʊdi/"
+        },
+        {
+          "en": "snowy",
+          "cn": "下雪的",
+          "emoji": "🌨️",
+          "ph": "/ˈsnəʊi/"
+        },
+        {
+          "en": "rainy",
+          "cn": "下雨的",
+          "emoji": "🌧️",
+          "ph": "/ˈreɪni/"
+        },
+        {
+          "en": "outside",
+          "cn": "外面",
+          "emoji": "🚪",
+          "ph": "/ˌaʊtˈsaɪd/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "At the farm",
+      "words": [
+        {
+          "en": "tomato",
+          "cn": "西红柿",
+          "emoji": "🍅",
+          "ph": "/təˈmɑːtəʊ/"
+        },
+        {
+          "en": "potato",
+          "cn": "土豆",
+          "emoji": "🥔",
+          "ph": "/pəˈteɪtəʊ/"
+        },
+        {
+          "en": "green beans",
+          "cn": "青豆",
+          "emoji": "🫘",
+          "ph": "/ɡriːn biːnz/"
+        },
+        {
+          "en": "carrot",
+          "cn": "胡萝卜",
+          "emoji": "🥕",
+          "ph": "/ˈkærət/"
+        },
+        {
+          "en": "horse",
+          "cn": "马",
+          "emoji": "🐴",
+          "ph": "/hɔːs/"
+        },
+        {
+          "en": "cow",
+          "cn": "奶牛",
+          "emoji": "🐄",
+          "ph": "/kaʊ/"
+        },
+        {
+          "en": "sheep",
+          "cn": "绵羊",
+          "emoji": "🐑",
+          "ph": "/ʃiːp/"
+        },
+        {
+          "en": "hen",
+          "cn": "母鸡",
+          "emoji": "🐔",
+          "ph": "/hen/"
+        },
+        {
+          "en": "these",
+          "cn": "这些",
+          "emoji": "👇",
+          "ph": "/ðiːz/"
+        },
+        {
+          "en": "those",
+          "cn": "那些",
+          "emoji": "👉",
+          "ph": "/ðəʊz/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "My clothes",
+      "words": [
+        {
+          "en": "clothes",
+          "cn": "衣服",
+          "emoji": "👚",
+          "ph": "/kləʊðz/"
+        },
+        {
+          "en": "dress",
+          "cn": "连衣裙",
+          "emoji": "👗",
+          "ph": "/dres/"
+        },
+        {
+          "en": "skirt",
+          "cn": "短裙",
+          "emoji": "👗",
+          "ph": "/skɜːt/"
+        },
+        {
+          "en": "coat",
+          "cn": "外套",
+          "emoji": "🧥",
+          "ph": "/kəʊt/"
+        },
+        {
+          "en": "sweater",
+          "cn": "毛衣",
+          "emoji": "🧦",
+          "ph": "/ˈswetə/"
+        },
+        {
+          "en": "sock",
+          "cn": "袜子",
+          "emoji": "🧦",
+          "ph": "/sɒk/"
+        },
+        {
+          "en": "shorts",
+          "cn": "短裤",
+          "emoji": "🩳",
+          "ph": "/ʃɔːts/"
+        },
+        {
+          "en": "jacket",
+          "cn": "夹克",
+          "emoji": "🧥",
+          "ph": "/ˈdʒækɪt/"
+        },
+        {
+          "en": "shirt",
+          "cn": "衬衫",
+          "emoji": "👔",
+          "ph": "/ʃɜːt/"
+        },
+        {
+          "en": "yours",
+          "cn": "你的",
+          "emoji": "👉",
+          "ph": "/jɔːz/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "Shopping",
+      "words": [
+        {
+          "en": "gloves",
+          "cn": "手套",
+          "emoji": "🧤",
+          "ph": "/ɡlʌvz/"
+        },
+        {
+          "en": "scarf",
+          "cn": "围巾",
+          "emoji": "🧣",
+          "ph": "/skɑːf/"
+        },
+        {
+          "en": "umbrella",
+          "cn": "雨伞",
+          "emoji": "☂️",
+          "ph": "/ʌmˈbrelə/"
+        },
+        {
+          "en": "sunglasses",
+          "cn": "太阳镜",
+          "emoji": "🕶️",
+          "ph": "/ˈsʌnɡlɑːsɪz/"
+        },
+        {
+          "en": "pretty",
+          "cn": "漂亮的",
+          "emoji": "😍",
+          "ph": "/ˈprɪti/"
+        },
+        {
+          "en": "expensive",
+          "cn": "贵的",
+          "emoji": "💰",
+          "ph": "/ɪkˈspensɪv/"
+        },
+        {
+          "en": "cheap",
+          "cn": "便宜的",
+          "emoji": "💵",
+          "ph": "/tʃiːp/"
+        },
+        {
+          "en": "nice",
+          "cn": "好的",
+          "emoji": "👍",
+          "ph": "/naɪs/"
+        },
+        {
+          "en": "size",
+          "cn": "尺寸",
+          "emoji": "📏",
+          "ph": "/saɪz/"
+        },
+        {
+          "en": "too",
+          "cn": "太",
+          "emoji": "⚠️",
+          "ph": "/tuː/"
+        }
+      ]
+    }
+  ],
+  "5_上册": [
+    {
+      "unit": "Unit 1",
+      "title": "What's he like?",
+      "words": [
+        {
+          "en": "old",
+          "cn": "老的",
+          "emoji": "👴",
+          "ph": "/əʊld/"
+        },
+        {
+          "en": "young",
+          "cn": "年轻的",
+          "emoji": "👦",
+          "ph": "/jʌŋ/"
+        },
+        {
+          "en": "funny",
+          "cn": "有趣的",
+          "emoji": "😂",
+          "ph": "/ˈfʌni/"
+        },
+        {
+          "en": "kind",
+          "cn": "和蔼的",
+          "emoji": "😇",
+          "ph": "/kaɪnd/"
+        },
+        {
+          "en": "strict",
+          "cn": "严格的",
+          "emoji": "😑",
+          "ph": "/strɪkt/"
+        },
+        {
+          "en": "polite",
+          "cn": "有礼貌的",
+          "emoji": "🤝",
+          "ph": "/pəˈlaɪt/"
+        },
+        {
+          "en": "hard-working",
+          "cn": "努力的",
+          "emoji": "📚",
+          "ph": "/ˌhɑːdˈwɜːkɪŋ/"
+        },
+        {
+          "en": "helpful",
+          "cn": "有帮助的",
+          "emoji": "🤝",
+          "ph": "/ˈhelpfʊl/"
+        },
+        {
+          "en": "clever",
+          "cn": "聪明的",
+          "emoji": "🧠",
+          "ph": "/ˈklevə/"
+        },
+        {
+          "en": "shy",
+          "cn": "害羞的",
+          "emoji": "🙈",
+          "ph": "/ʃaɪ/"
+        },
+        {
+          "en": "know",
+          "cn": "知道",
+          "emoji": "💡",
+          "ph": "/nəʊ/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "My week",
+      "words": [
+        {
+          "en": "Monday",
+          "cn": "星期一",
+          "emoji": "1️⃣",
+          "ph": "/ˈmʌndi/"
+        },
+        {
+          "en": "Tuesday",
+          "cn": "星期二",
+          "emoji": "2️⃣",
+          "ph": "/ˈtjuːzdi/"
+        },
+        {
+          "en": "Wednesday",
+          "cn": "星期三",
+          "emoji": "3️⃣",
+          "ph": "/ˈwenzdi/"
+        },
+        {
+          "en": "Thursday",
+          "cn": "星期四",
+          "emoji": "4️⃣",
+          "ph": "/ˈθɜːzdi/"
+        },
+        {
+          "en": "Friday",
+          "cn": "星期五",
+          "emoji": "5️⃣",
+          "ph": "/ˈfraɪdi/"
+        },
+        {
+          "en": "Saturday",
+          "cn": "星期六",
+          "emoji": "6️⃣",
+          "ph": "/ˈsætədi/"
+        },
+        {
+          "en": "Sunday",
+          "cn": "星期日",
+          "emoji": "7️⃣",
+          "ph": "/ˈsʌndi/"
+        },
+        {
+          "en": "weekend",
+          "cn": "周末",
+          "emoji": "🏖️",
+          "ph": "/ˌwiːkˈend/"
+        },
+        {
+          "en": "wash my clothes",
+          "cn": "洗我的衣服",
+          "emoji": "👚",
+          "ph": "/wɒʃ maɪ kləʊðz/"
+        },
+        {
+          "en": "watch TV",
+          "cn": "看电视",
+          "emoji": "📺",
+          "ph": "/wɒtʃ tiːˈviː/"
+        },
+        {
+          "en": "do homework",
+          "cn": "做作业",
+          "emoji": "📝",
+          "ph": "/duː ˈhəʊmwɜːk/"
+        },
+        {
+          "en": "read books",
+          "cn": "读书",
+          "emoji": "📖",
+          "ph": "/riːd bʊks/"
+        },
+        {
+          "en": "play football",
+          "cn": "踢足球",
+          "emoji": "⚽",
+          "ph": "/pleɪ ˈfʊtbɔːl/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "What would you like?",
+      "words": [
+        {
+          "en": "sandwich",
+          "cn": "三明治",
+          "emoji": "🥪",
+          "ph": "/ˈsænwɪtʃ/"
+        },
+        {
+          "en": "salad",
+          "cn": "沙拉",
+          "emoji": "🥗",
+          "ph": "/ˈsæləd/"
+        },
+        {
+          "en": "hamburger",
+          "cn": "汉堡",
+          "emoji": "🍔",
+          "ph": "/ˈhæmbɜːɡə/"
+        },
+        {
+          "en": "ice cream",
+          "cn": "冰淇淋",
+          "emoji": "🍦",
+          "ph": "/aɪs kriːm/"
+        },
+        {
+          "en": "tea",
+          "cn": "茶",
+          "emoji": "🍵",
+          "ph": "/tiː/"
+        },
+        {
+          "en": "fresh",
+          "cn": "新鲜的",
+          "emoji": "✅",
+          "ph": "/freʃ/"
+        },
+        {
+          "en": "healthy",
+          "cn": "健康的",
+          "emoji": "💚",
+          "ph": "/ˈhelθi/"
+        },
+        {
+          "en": "delicious",
+          "cn": "美味的",
+          "emoji": "😋",
+          "ph": "/dɪˈlɪʃəs/"
+        },
+        {
+          "en": "hot",
+          "cn": "辣的",
+          "emoji": "🌶️",
+          "ph": "/hɒt/"
+        },
+        {
+          "en": "sweet",
+          "cn": "甜的",
+          "emoji": "🍬",
+          "ph": "/swiːt/"
+        },
+        {
+          "en": "drink",
+          "cn": "喝",
+          "emoji": "🥤",
+          "ph": "/drɪŋk/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "What can you do?",
+      "words": [
+        {
+          "en": "dance",
+          "cn": "跳舞",
+          "emoji": "💃",
+          "ph": "/dɑːns/"
+        },
+        {
+          "en": "sing",
+          "cn": "唱歌",
+          "emoji": "🎤",
+          "ph": "/sɪŋ/"
+        },
+        {
+          "en": "play the pipa",
+          "cn": "弹琵琶",
+          "emoji": "🎵",
+          "ph": "/pleɪ ðə ˈpiːpɑː/"
+        },
+        {
+          "en": "kung fu",
+          "cn": "功夫",
+          "emoji": "🥋",
+          "ph": "/ˌkʌŋ ˈfuː/"
+        },
+        {
+          "en": "draw cartoons",
+          "cn": "画漫画",
+          "emoji": "🎨",
+          "ph": "/drɔː kɑːˈtuːnz/"
+        },
+        {
+          "en": "swim",
+          "cn": "游泳",
+          "emoji": "🏊",
+          "ph": "/swɪm/"
+        },
+        {
+          "en": "speak English",
+          "cn": "说英语",
+          "emoji": "🇺🇸",
+          "ph": "/spiːk ˈɪŋɡlɪʃ/"
+        },
+        {
+          "en": "cook",
+          "cn": "做饭",
+          "emoji": "🍳",
+          "ph": "/kʊk/"
+        },
+        {
+          "en": "play basketball",
+          "cn": "打篮球",
+          "emoji": "🏀",
+          "ph": "/pleɪ ˈbɑːskɪtbɔːl/"
+        },
+        {
+          "en": "play ping-pong",
+          "cn": "打乒乓球",
+          "emoji": "🏓",
+          "ph": "/pleɪ ˈpɪŋ pɒŋ/"
+        },
+        {
+          "en": "party",
+          "cn": "派对",
+          "emoji": "🎉",
+          "ph": "/ˈpɑːti/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "There is a big bed",
+      "words": [
+        {
+          "en": "clock",
+          "cn": "时钟",
+          "emoji": "🕐",
+          "ph": "/klɒk/"
+        },
+        {
+          "en": "plant",
+          "cn": "植物",
+          "emoji": "🌱",
+          "ph": "/plɑːnt/"
+        },
+        {
+          "en": "bottle",
+          "cn": "瓶子",
+          "emoji": "🍶",
+          "ph": "/ˈbɒtl/"
+        },
+        {
+          "en": "water bottle",
+          "cn": "水瓶",
+          "emoji": "🍶",
+          "ph": "/ˈwɔːtə ˈbɒtl/"
+        },
+        {
+          "en": "bike",
+          "cn": "自行车",
+          "emoji": "🚲",
+          "ph": "/baɪk/"
+        },
+        {
+          "en": "photo",
+          "cn": "照片",
+          "emoji": "📷",
+          "ph": "/ˈfəʊtəʊ/"
+        },
+        {
+          "en": "front",
+          "cn": "前面",
+          "emoji": "👉",
+          "ph": "/frʌnt/"
+        },
+        {
+          "en": "between",
+          "cn": "在...之间",
+          "emoji": "↔️",
+          "ph": "/bɪˈtwiːn/"
+        },
+        {
+          "en": "above",
+          "cn": "在上面",
+          "emoji": "⬆️",
+          "ph": "/əˈbʌv/"
+        },
+        {
+          "en": "beside",
+          "cn": "在旁边",
+          "emoji": "➡️",
+          "ph": "/bɪˈsaɪd/"
+        },
+        {
+          "en": "behind",
+          "cn": "在后面",
+          "emoji": "⬇️",
+          "ph": "/bɪˈhaɪnd/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "In a nature park",
+      "words": [
+        {
+          "en": "forest",
+          "cn": "森林",
+          "emoji": "🌲",
+          "ph": "/ˈfɒrɪst/"
+        },
+        {
+          "en": "river",
+          "cn": "河流",
+          "emoji": "🏞",
+          "ph": "/ˈrɪvə/"
+        },
+        {
+          "en": "lake",
+          "cn": "湖泊",
+          "emoji": "🏞",
+          "ph": "/leɪk/"
+        },
+        {
+          "en": "mountain",
+          "cn": "山",
+          "emoji": "⛰️",
+          "ph": "/ˈmaʊntɪn/"
+        },
+        {
+          "en": "hill",
+          "cn": "小山",
+          "emoji": "🏔",
+          "ph": "/hɪl/"
+        },
+        {
+          "en": "tree",
+          "cn": "树",
+          "emoji": "🌳",
+          "ph": "/triː/"
+        },
+        {
+          "en": "bridge",
+          "cn": "桥",
+          "emoji": "🌉",
+          "ph": "/brɪdʒ/"
+        },
+        {
+          "en": "building",
+          "cn": "建筑物",
+          "emoji": "🏢",
+          "ph": "/ˈbɪldɪŋ/"
+        },
+        {
+          "en": "village",
+          "cn": "村庄",
+          "emoji": "🏘",
+          "ph": "/ˈvɪlɪdʒ/"
+        },
+        {
+          "en": "house",
+          "cn": "房子",
+          "emoji": "🏠",
+          "ph": "/haʊs/"
+        },
+        {
+          "en": "boating",
+          "cn": "划船",
+          "emoji": "🚣",
+          "ph": "/ˈbəʊtɪŋ/"
+        }
+      ]
+    }
+  ],
+  "5_下册": [
+    {
+      "unit": "Unit 1",
+      "title": "My day",
+      "words": [
+        {
+          "en": "eat breakfast",
+          "cn": "吃早餐",
+          "emoji": "🥐",
+          "ph": "/iːt ˈbrekfəst/"
+        },
+        {
+          "en": "have...class",
+          "cn": "上...课",
+          "emoji": "🏫",
+          "ph": "/hæv klɑːs/"
+        },
+        {
+          "en": "play sports",
+          "cn": "做运动",
+          "emoji": "⚽",
+          "ph": "/pleɪ spɔːts/"
+        },
+        {
+          "en": "exercise",
+          "cn": "锻炼",
+          "emoji": "🏋️",
+          "ph": "/ˈeksəsaɪz/"
+        },
+        {
+          "en": "do morning exercises",
+          "cn": "做早操",
+          "emoji": "🤸",
+          "ph": "/duː ˈmɔːnɪŋ ˈeksəsaɪzɪz/"
+        },
+        {
+          "en": "eat dinner",
+          "cn": "吃晚餐",
+          "emoji": "🍽",
+          "ph": "/iːt ˈdɪnə/"
+        },
+        {
+          "en": "clean my room",
+          "cn": "打扫我的房间",
+          "emoji": "🧹",
+          "ph": "/kliːn maɪ ruːm/"
+        },
+        {
+          "en": "go for a walk",
+          "cn": "去散步",
+          "emoji": "🚶",
+          "ph": "/ɡəʊ fɔːr ə wɔːk/"
+        },
+        {
+          "en": "go shopping",
+          "cn": "去购物",
+          "emoji": "🛒",
+          "ph": "/ɡəʊ ˈʃɒpɪŋ/"
+        },
+        {
+          "en": "take",
+          "cn": "上（课）",
+          "emoji": "📚",
+          "ph": "/teɪk/"
+        },
+        {
+          "en": "dancing",
+          "cn": "跳舞",
+          "emoji": "💃",
+          "ph": "/ˈdɑːnsɪŋ/"
+        },
+        {
+          "en": "when",
+          "cn": "什么时候",
+          "emoji": "⏰",
+          "ph": "/wen/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "My favourite season",
+      "words": [
+        {
+          "en": "spring",
+          "cn": "春天",
+          "emoji": "🌸",
+          "ph": "/sprɪŋ/"
+        },
+        {
+          "en": "summer",
+          "cn": "夏天",
+          "emoji": "☀️",
+          "ph": "/ˈsʌmə/"
+        },
+        {
+          "en": "autumn",
+          "cn": "秋天",
+          "emoji": "🍂",
+          "ph": "/ˈɔːtəm/"
+        },
+        {
+          "en": "winter",
+          "cn": "冬天",
+          "emoji": "❄️",
+          "ph": "/ˈwɪntə/"
+        },
+        {
+          "en": "season",
+          "cn": "季节",
+          "emoji": "🗓️",
+          "ph": "/ˈsiːzn/"
+        },
+        {
+          "en": "picnic",
+          "cn": "野餐",
+          "emoji": "🧺",
+          "ph": "/ˈpɪknɪk/"
+        },
+        {
+          "en": "go on a picnic",
+          "cn": "去野餐",
+          "emoji": "🧺",
+          "ph": "/ɡəʊ ɒn ə ˈpɪknɪk/"
+        },
+        {
+          "en": "pick",
+          "cn": "摘",
+          "emoji": "🍎",
+          "ph": "/pɪk/"
+        },
+        {
+          "en": "pick apples",
+          "cn": "摘苹果",
+          "emoji": "🍎",
+          "ph": "/pɪk ˈæplz/"
+        },
+        {
+          "en": "snowman",
+          "cn": "雪人",
+          "emoji": "⛄",
+          "ph": "/ˈsnəʊmæn/"
+        },
+        {
+          "en": "make a snowman",
+          "cn": "堆雪人",
+          "emoji": "⛄",
+          "ph": "/meɪk ə ˈsnəʊmæn/"
+        },
+        {
+          "en": "which",
+          "cn": "哪一个",
+          "emoji": "❓",
+          "ph": "/wɪtʃ/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "My school calendar",
+      "words": [
+        {
+          "en": "January",
+          "cn": "一月",
+          "emoji": "1️⃣",
+          "ph": "/ˈdʒænjuəri/"
+        },
+        {
+          "en": "February",
+          "cn": "二月",
+          "emoji": "2️⃣",
+          "ph": "/ˈfebruəri/"
+        },
+        {
+          "en": "March",
+          "cn": "三月",
+          "emoji": "3️⃣",
+          "ph": "/mɑːtʃ/"
+        },
+        {
+          "en": "April",
+          "cn": "四月",
+          "emoji": "4️⃣",
+          "ph": "/ˈeɪprəl/"
+        },
+        {
+          "en": "May",
+          "cn": "五月",
+          "emoji": "5️⃣",
+          "ph": "/meɪ/"
+        },
+        {
+          "en": "June",
+          "cn": "六月",
+          "emoji": "6️⃣",
+          "ph": "/dʒuːn/"
+        },
+        {
+          "en": "July",
+          "cn": "七月",
+          "emoji": "7️⃣",
+          "ph": "/dʒuːˈlaɪ/"
+        },
+        {
+          "en": "August",
+          "cn": "八月",
+          "emoji": "8️⃣",
+          "ph": "/ˈɔːɡəst/"
+        },
+        {
+          "en": "September",
+          "cn": "九月",
+          "emoji": "9️⃣",
+          "ph": "/sepˈtembə/"
+        },
+        {
+          "en": "October",
+          "cn": "十月",
+          "emoji": "🔟",
+          "ph": "/ɒkˈtəʊbə/"
+        },
+        {
+          "en": "November",
+          "cn": "十一月",
+          "emoji": "🔟",
+          "ph": "/nəʊˈvembə/"
+        },
+        {
+          "en": "December",
+          "cn": "十二月",
+          "emoji": "🔟",
+          "ph": "/dɪˈsembə/"
+        },
+        {
+          "en": "holiday",
+          "cn": "假日",
+          "emoji": "🏖️",
+          "ph": "/ˈhɒlədeɪ/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "When is Easter?",
+      "words": [
+        {
+          "en": "first",
+          "cn": "第一",
+          "emoji": "1️⃣",
+          "ph": "/fɜːst/"
+        },
+        {
+          "en": "second",
+          "cn": "第二",
+          "emoji": "2️⃣",
+          "ph": "/ˈsekənd/"
+        },
+        {
+          "en": "third",
+          "cn": "第三",
+          "emoji": "3️⃣",
+          "ph": "/θɜːd/"
+        },
+        {
+          "en": "fourth",
+          "cn": "第四",
+          "emoji": "4️⃣",
+          "ph": "/fɔːθ/"
+        },
+        {
+          "en": "fifth",
+          "cn": "第五",
+          "emoji": "5️⃣",
+          "ph": "/fɪfθ/"
+        },
+        {
+          "en": "twelfth",
+          "cn": "第十二",
+          "emoji": "12️⃣",
+          "ph": "/twelfθ/"
+        },
+        {
+          "en": "twentieth",
+          "cn": "第二十",
+          "emoji": "20️⃣",
+          "ph": "/ˈtwentiiθ/"
+        },
+        {
+          "en": "twenty-first",
+          "cn": "第二十一",
+          "emoji": "21️⃣",
+          "ph": "/ˌtwenti ˈfɜːst/"
+        },
+        {
+          "en": "twenty-third",
+          "cn": "第二十三",
+          "emoji": "23️⃣",
+          "ph": "/ˌtwenti ˈθɜːd/"
+        },
+        {
+          "en": "thirtieth",
+          "cn": "第三十",
+          "emoji": "30️⃣",
+          "ph": "/ˈθɜːtiiθ/"
+        },
+        {
+          "en": "special",
+          "cn": "特别的",
+          "emoji": "⭐",
+          "ph": "/ˈspeʃl/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "Whose dog is it?",
+      "words": [
+        {
+          "en": "mine",
+          "cn": "我的",
+          "emoji": "👦",
+          "ph": "/maɪn/"
+        },
+        {
+          "en": "yours",
+          "cn": "你的",
+          "emoji": "👉",
+          "ph": "/jɔːz/"
+        },
+        {
+          "en": "his",
+          "cn": "他的",
+          "emoji": "👨",
+          "ph": "/hɪz/"
+        },
+        {
+          "en": "hers",
+          "cn": "她的",
+          "emoji": "👩",
+          "ph": "/hɜːz/"
+        },
+        {
+          "en": "theirs",
+          "cn": "他们的",
+          "emoji": "👥",
+          "ph": "/ðeəz/"
+        },
+        {
+          "en": "ours",
+          "cn": "我们的",
+          "emoji": "👨👩👧",
+          "ph": "/ˈaʊəz/"
+        },
+        {
+          "en": "climbing",
+          "cn": "正在爬",
+          "emoji": "🧗",
+          "ph": "/ˈklaɪmɪŋ/"
+        },
+        {
+          "en": "eating",
+          "cn": "正在吃",
+          "emoji": "🍽",
+          "ph": "/ˈiːtɪŋ/"
+        },
+        {
+          "en": "playing",
+          "cn": "正在玩",
+          "emoji": "🎮",
+          "ph": "/ˈpleɪɪŋ/"
+        },
+        {
+          "en": "jumping",
+          "cn": "正在跳",
+          "emoji": "🤸",
+          "ph": "/ˈdʒʌmpɪŋ/"
+        },
+        {
+          "en": "drinking",
+          "cn": "正在喝",
+          "emoji": "🥤",
+          "ph": "/ˈdrɪŋkɪŋ/"
+        },
+        {
+          "en": "sleeping",
+          "cn": "正在睡",
+          "emoji": "😴",
+          "ph": "/ˈsliːpɪŋ/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "Work quietly!",
+      "words": [
+        {
+          "en": "doing morning exercises",
+          "cn": "正在做早操",
+          "emoji": "🤸",
+          "ph": "/ˈduːɪŋ ˈmɔːnɪŋ ˈeksəsaɪzɪz/"
+        },
+        {
+          "en": "having...class",
+          "cn": "正在上...课",
+          "emoji": "🏫",
+          "ph": "/ˈhævɪŋ klɑːs/"
+        },
+        {
+          "en": "eating lunch",
+          "cn": "正在吃午餐",
+          "emoji": "🍱",
+          "ph": "/ˈiːtɪŋ lʌntʃ/"
+        },
+        {
+          "en": "reading a book",
+          "cn": "正在读书",
+          "emoji": "📖",
+          "ph": "/ˈriːdɪŋ ə bʊk/"
+        },
+        {
+          "en": "listening to music",
+          "cn": "正在听音乐",
+          "emoji": "🎧",
+          "ph": "/ˈlɪsənɪŋ tuː ˈmjuːzɪk/"
+        },
+        {
+          "en": "keep",
+          "cn": "保持",
+          "emoji": "✋",
+          "ph": "/kiːp/"
+        },
+        {
+          "en": "keep to the right",
+          "cn": "靠右走",
+          "emoji": "➡️",
+          "ph": "/kiːp tuː ðə raɪt/"
+        },
+        {
+          "en": "keep your desk clean",
+          "cn": "保持书桌干净",
+          "emoji": "🧹",
+          "ph": "/kiːp jɔː desk kliːn/"
+        },
+        {
+          "en": "talk quietly",
+          "cn": "小声说话",
+          "emoji": "🤫",
+          "ph": "/tɔːk ˈkwaɪətli/"
+        },
+        {
+          "en": "turn",
+          "cn": "顺序",
+          "emoji": "🔢",
+          "ph": "/tɜːn/"
+        },
+        {
+          "en": "take turns",
+          "cn": "轮流",
+          "emoji": "🔄",
+          "ph": "/teɪk tɜːnz/"
+        }
+      ]
+    }
+  ],
+  "6_上册": [
+    {
+      "unit": "Unit 1",
+      "title": "How can I get there?",
+      "words": [
+        {
+          "en": "science",
+          "cn": "科学",
+          "emoji": "🔬",
+          "ph": "/ˈsaɪəns/"
+        },
+        {
+          "en": "museum",
+          "cn": "博物馆",
+          "emoji": "🏛️",
+          "ph": "/mjuːˈziːəm/"
+        },
+        {
+          "en": "post office",
+          "cn": "邮局",
+          "emoji": "🏤",
+          "ph": "/pəʊst ˈɒfɪs/"
+        },
+        {
+          "en": "bookstore",
+          "cn": "书店",
+          "emoji": "📚",
+          "ph": "/ˈbʊkstɔː/"
+        },
+        {
+          "en": "cinema",
+          "cn": "电影院",
+          "emoji": "🎬",
+          "ph": "/ˈsɪnəmə/"
+        },
+        {
+          "en": "hospital",
+          "cn": "医院",
+          "emoji": "🏥",
+          "ph": "/ˈhɒspɪtl/"
+        },
+        {
+          "en": "crossing",
+          "cn": "十字路口",
+          "emoji": "🚥",
+          "ph": "/ˈkrɒsɪŋ/"
+        },
+        {
+          "en": "turn left",
+          "cn": "左转",
+          "emoji": "⬅️",
+          "ph": "/tɜːn left/"
+        },
+        {
+          "en": "turn right",
+          "cn": "右转",
+          "emoji": "➡️",
+          "ph": "/tɜːn raɪt/"
+        },
+        {
+          "en": "go straight",
+          "cn": "直走",
+          "emoji": "⬆️",
+          "ph": "/ɡəʊ streɪt/"
+        },
+        {
+          "en": "GPS",
+          "cn": "定位系统",
+          "emoji": "📍",
+          "ph": "/ˌdʒiː piː ˈes/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "Ways to go to school",
+      "words": [
+        {
+          "en": "on foot",
+          "cn": "步行",
+          "emoji": "🚶",
+          "ph": "/ɒn fʊt/"
+        },
+        {
+          "en": "by",
+          "cn": "乘坐",
+          "emoji": "🚗",
+          "ph": "/baɪ/"
+        },
+        {
+          "en": "bus",
+          "cn": "公共汽车",
+          "emoji": "🚌",
+          "ph": "/bʌs/"
+        },
+        {
+          "en": "plane",
+          "cn": "飞机",
+          "emoji": "✈️",
+          "ph": "/pleɪn/"
+        },
+        {
+          "en": "taxi",
+          "cn": "出租车",
+          "emoji": "🚕",
+          "ph": "/ˈtæksi/"
+        },
+        {
+          "en": "ship",
+          "cn": "船",
+          "emoji": "🚢",
+          "ph": "/ʃɪp/"
+        },
+        {
+          "en": "subway",
+          "cn": "地铁",
+          "emoji": "🚇",
+          "ph": "/ˈsʌbweɪ/"
+        },
+        {
+          "en": "train",
+          "cn": "火车",
+          "emoji": "🚅",
+          "ph": "/treɪn/"
+        },
+        {
+          "en": "slow down",
+          "cn": "慢下来",
+          "emoji": "🔻",
+          "ph": "/sləʊ daʊn/"
+        },
+        {
+          "en": "stop",
+          "cn": "停",
+          "emoji": "🛑",
+          "ph": "/stɒp/"
+        },
+        {
+          "en": "helmet",
+          "cn": "头盔",
+          "emoji": "⛑️",
+          "ph": "/ˈhelmɪt/"
+        },
+        {
+          "en": "must",
+          "cn": "必须",
+          "emoji": "⚠️",
+          "ph": "/mʌst/"
+        },
+        {
+          "en": "wear",
+          "cn": "穿、戴",
+          "emoji": "👕",
+          "ph": "/weə/"
+        },
+        {
+          "en": "attention",
+          "cn": "注意",
+          "emoji": "⚠️",
+          "ph": "/əˈtenʃn/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "My weekend plan",
+      "words": [
+        {
+          "en": "visit",
+          "cn": "拜访",
+          "emoji": "🤝",
+          "ph": "/ˈvɪzɪt/"
+        },
+        {
+          "en": "film",
+          "cn": "电影",
+          "emoji": "🎬",
+          "ph": "/fɪlm/"
+        },
+        {
+          "en": "see a film",
+          "cn": "看电影",
+          "emoji": "🎬",
+          "ph": "/siː ə fɪlm/"
+        },
+        {
+          "en": "trip",
+          "cn": "旅行",
+          "emoji": "🧳",
+          "ph": "/trɪp/"
+        },
+        {
+          "en": "take a trip",
+          "cn": "去旅行",
+          "emoji": "🧳",
+          "ph": "/teɪk ə trɪp/"
+        },
+        {
+          "en": "supermarket",
+          "cn": "超市",
+          "emoji": "🛒",
+          "ph": "/ˈsuːpəmɑːkɪt/"
+        },
+        {
+          "en": "evening",
+          "cn": "晚上",
+          "emoji": "🌙",
+          "ph": "/ˈiːvnɪŋ/"
+        },
+        {
+          "en": "tonight",
+          "cn": "今晚",
+          "emoji": "🌃",
+          "ph": "/təˈnaɪt/"
+        },
+        {
+          "en": "tomorrow",
+          "cn": "明天",
+          "emoji": "🌅",
+          "ph": "/təˈmɒrəʊ/"
+        },
+        {
+          "en": "next week",
+          "cn": "下周",
+          "emoji": "📅",
+          "ph": "/nekst wiːk/"
+        },
+        {
+          "en": "dictionary",
+          "cn": "词典",
+          "emoji": "📕",
+          "ph": "/ˈdɪkʃənri/"
+        },
+        {
+          "en": "comic",
+          "cn": "滑稽的",
+          "emoji": "😂",
+          "ph": "/ˈkɒmɪk/"
+        },
+        {
+          "en": "comic book",
+          "cn": "连环画",
+          "emoji": "📗",
+          "ph": "/ˈkɒmɪk bʊk/"
+        },
+        {
+          "en": "word book",
+          "cn": "单词书",
+          "emoji": "📘",
+          "ph": "/wɜːd bʊk/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "I have a pen pal",
+      "words": [
+        {
+          "en": "hobby",
+          "cn": "爱好",
+          "emoji": "⭐",
+          "ph": "/ˈhɒbi/"
+        },
+        {
+          "en": "jasmine",
+          "cn": "茉莉",
+          "emoji": "🌸",
+          "ph": "/ˈdʒæzmɪn/"
+        },
+        {
+          "en": "idea",
+          "cn": "主意",
+          "emoji": "💡",
+          "ph": "/aɪˈdɪə/"
+        },
+        {
+          "en": "Canberra",
+          "cn": "堪培拉",
+          "emoji": "🇦🇺",
+          "ph": "/ˈkænbərə/"
+        },
+        {
+          "en": "amazing",
+          "cn": "令人惊奇的",
+          "emoji": "😮",
+          "ph": "/əˈmeɪzɪŋ/"
+        },
+        {
+          "en": "shall",
+          "cn": "应该",
+          "emoji": "❓",
+          "ph": "/ʃæl/"
+        },
+        {
+          "en": "goal",
+          "cn": "目标",
+          "emoji": "🥅",
+          "ph": "/ɡəʊl/"
+        },
+        {
+          "en": "join",
+          "cn": "加入",
+          "emoji": "➕️",
+          "ph": "/dʒɔɪn/"
+        },
+        {
+          "en": "club",
+          "cn": "俱乐部",
+          "emoji": "🏫",
+          "ph": "/klʌb/"
+        },
+        {
+          "en": "share",
+          "cn": "分享",
+          "emoji": "🤝",
+          "ph": "/ʃeə/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "What does he do?",
+      "words": [
+        {
+          "en": "factory",
+          "cn": "工厂",
+          "emoji": "🏭",
+          "ph": "/ˈfæktri/"
+        },
+        {
+          "en": "worker",
+          "cn": "工人",
+          "emoji": "👷",
+          "ph": "/ˈwɜːkə/"
+        },
+        {
+          "en": "postman",
+          "cn": "邮递员",
+          "emoji": "📮",
+          "ph": "/ˈpəʊstmən/"
+        },
+        {
+          "en": "businessman",
+          "cn": "商人",
+          "emoji": "👔",
+          "ph": "/ˈbɪznəsmæn/"
+        },
+        {
+          "en": "police officer",
+          "cn": "警察",
+          "emoji": "👮",
+          "ph": "/pəˈliːs ˈɒfɪsə/"
+        },
+        {
+          "en": "fisherman",
+          "cn": "渔民",
+          "emoji": "🎣",
+          "ph": "/ˈfɪʃəmæn/"
+        },
+        {
+          "en": "scientist",
+          "cn": "科学家",
+          "emoji": "🔬",
+          "ph": "/ˈsaɪəntɪst/"
+        },
+        {
+          "en": "pilot",
+          "cn": "飞行员",
+          "emoji": "✈️",
+          "ph": "/ˈpaɪlət/"
+        },
+        {
+          "en": "coach",
+          "cn": "教练",
+          "emoji": "⚽",
+          "ph": "/kəʊtʃ/"
+        },
+        {
+          "en": "country",
+          "cn": "国家",
+          "emoji": "🗺️",
+          "ph": "/ˈkʌntri/"
+        },
+        {
+          "en": "head teacher",
+          "cn": "校长",
+          "emoji": "👩🏫",
+          "ph": "/hed ˈtiːtʃə/"
+        },
+        {
+          "en": "sea",
+          "cn": "大海",
+          "emoji": "🌊",
+          "ph": "/siː/"
+        },
+        {
+          "en": "university",
+          "cn": "大学",
+          "emoji": "🏫",
+          "ph": "/ˌjuːnɪˈvɜːsəti/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "How do you feel?",
+      "words": [
+        {
+          "en": "angry",
+          "cn": "生气的",
+          "emoji": "😡",
+          "ph": "/ˈæŋɡri/"
+        },
+        {
+          "en": "afraid",
+          "cn": "害怕的",
+          "emoji": "😨",
+          "ph": "/əˈfreɪd/"
+        },
+        {
+          "en": "sad",
+          "cn": "难过的",
+          "emoji": "😢",
+          "ph": "/sæd/"
+        },
+        {
+          "en": "worried",
+          "cn": "担心的",
+          "emoji": "😰",
+          "ph": "/ˈwʌrid/"
+        },
+        {
+          "en": "happy",
+          "cn": "高兴的",
+          "emoji": "😊",
+          "ph": "/ˈhæpi/"
+        },
+        {
+          "en": "see a doctor",
+          "cn": "看医生",
+          "emoji": "👨⚕",
+          "ph": "/siː ə ˈdɒktə/"
+        },
+        {
+          "en": "wear",
+          "cn": "穿、戴",
+          "emoji": "👕",
+          "ph": "/weə/"
+        },
+        {
+          "en": "more",
+          "cn": "更多的",
+          "emoji": "➕️",
+          "ph": "/mɔː/"
+        },
+        {
+          "en": "deep",
+          "cn": "深的",
+          "emoji": "🌊",
+          "ph": "/diːp/"
+        },
+        {
+          "en": "breath",
+          "cn": "呼吸",
+          "emoji": "😮",
+          "ph": "/breθ/"
+        },
+        {
+          "en": "take a deep breath",
+          "cn": "深呼吸",
+          "emoji": "😮",
+          "ph": "/teɪk ə diːp breθ/"
+        },
+        {
+          "en": "count",
+          "cn": "数",
+          "emoji": "🔢",
+          "ph": "/kaʊnt/"
+        },
+        {
+          "en": "count to ten",
+          "cn": "数到十",
+          "emoji": "🔟",
+          "ph": "/kaʊnt tuː ten/"
+        }
+      ]
+    }
+  ],
+  "6_下册": [
+    {
+      "unit": "Unit 1",
+      "title": "How tall are you?",
+      "words": [
+        {
+          "en": "younger",
+          "cn": "更年轻的",
+          "emoji": "👦",
+          "ph": "/ˈjʌŋɡə/"
+        },
+        {
+          "en": "older",
+          "cn": "更老的",
+          "emoji": "👴",
+          "ph": "/ˈəʊldə/"
+        },
+        {
+          "en": "taller",
+          "cn": "更高的",
+          "emoji": "📏",
+          "ph": "/ˈtɔːlə/"
+        },
+        {
+          "en": "shorter",
+          "cn": "更矮的",
+          "emoji": "📐",
+          "ph": "/ˈʃɔːtə/"
+        },
+        {
+          "en": "longer",
+          "cn": "更长的",
+          "emoji": "📏",
+          "ph": "/ˈlɒŋɡə/"
+        },
+        {
+          "en": "thinner",
+          "cn": "更瘦的",
+          "emoji": "😌",
+          "ph": "/ˈθɪnə/"
+        },
+        {
+          "en": "heavier",
+          "cn": "更重的",
+          "emoji": "🏋️",
+          "ph": "/ˈheviə/"
+        },
+        {
+          "en": "bigger",
+          "cn": "更大的",
+          "emoji": "🔍",
+          "ph": "/ˈbɪɡə/"
+        },
+        {
+          "en": "smaller",
+          "cn": "更小的",
+          "emoji": "🔎",
+          "ph": "/ˈsmɔːlə/"
+        },
+        {
+          "en": "stronger",
+          "cn": "更强壮的",
+          "emoji": "💪",
+          "ph": "/ˈstrɒŋɡə/"
+        },
+        {
+          "en": "dinosaur",
+          "cn": "恐龙",
+          "emoji": "🦕",
+          "ph": "/ˈdaɪnəsɔː/"
+        },
+        {
+          "en": "hall",
+          "cn": "大厅",
+          "emoji": "🏢",
+          "ph": "/hɔːl/"
+        },
+        {
+          "en": "metre",
+          "cn": "米",
+          "emoji": "📏",
+          "ph": "/ˈmiːtə/"
+        },
+        {
+          "en": "than",
+          "cn": "比",
+          "emoji": "➡️",
+          "ph": "/ðæn/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "Last weekend",
+      "words": [
+        {
+          "en": "cleaned",
+          "cn": "打扫了",
+          "emoji": "🧹",
+          "ph": "/kliːnd/"
+        },
+        {
+          "en": "stayed",
+          "cn": "待了",
+          "emoji": "🏠",
+          "ph": "/steɪd/"
+        },
+        {
+          "en": "washed",
+          "cn": "洗了",
+          "emoji": "🫧",
+          "ph": "/wɒʃt/"
+        },
+        {
+          "en": "watched",
+          "cn": "看了",
+          "emoji": "📺",
+          "ph": "/wɒtʃt/"
+        },
+        {
+          "en": "had",
+          "cn": "有了",
+          "emoji": "🍽",
+          "ph": "/hæd/"
+        },
+        {
+          "en": "slept",
+          "cn": "睡了",
+          "emoji": "😴",
+          "ph": "/slept/"
+        },
+        {
+          "en": "read",
+          "cn": "读了",
+          "emoji": "📖",
+          "ph": "/red/"
+        },
+        {
+          "en": "saw",
+          "cn": "看见了",
+          "emoji": "👀",
+          "ph": "/sɔː/"
+        },
+        {
+          "en": "last",
+          "cn": "上一个",
+          "emoji": "⏮",
+          "ph": "/lɑːst/"
+        },
+        {
+          "en": "before",
+          "cn": "在...之前",
+          "emoji": "⬅️",
+          "ph": "/bɪˈfɔː/"
+        },
+        {
+          "en": "drank",
+          "cn": "喝了",
+          "emoji": "🥤",
+          "ph": "/dræŋk/"
+        },
+        {
+          "en": "show",
+          "cn": "演出",
+          "emoji": "🎭",
+          "ph": "/ʃəʊ/"
+        },
+        {
+          "en": "magazine",
+          "cn": "杂志",
+          "emoji": "📰",
+          "ph": "/ˌmæɡəˈziːn/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "Where did you go?",
+      "words": [
+        {
+          "en": "went",
+          "cn": "去了",
+          "emoji": "🚶",
+          "ph": "/went/"
+        },
+        {
+          "en": "camp",
+          "cn": "营地",
+          "emoji": "⛺",
+          "ph": "/kæmp/"
+        },
+        {
+          "en": "went camping",
+          "cn": "去露营",
+          "emoji": "⛺",
+          "ph": "/went ˈkæmpɪŋ/"
+        },
+        {
+          "en": "ate",
+          "cn": "吃了",
+          "emoji": "🍽",
+          "ph": "/et/"
+        },
+        {
+          "en": "took",
+          "cn": "带了",
+          "emoji": "📷",
+          "ph": "/tʊk/"
+        },
+        {
+          "en": "took pictures",
+          "cn": "拍了照片",
+          "emoji": "📷",
+          "ph": "/tʊk ˈpɪktʃəz/"
+        },
+        {
+          "en": "bought",
+          "cn": "买了",
+          "emoji": "🛒",
+          "ph": "/bɔːt/"
+        },
+        {
+          "en": "gift",
+          "cn": "礼物",
+          "emoji": "🎁",
+          "ph": "/ɡɪft/"
+        },
+        {
+          "en": "fell",
+          "cn": "摔倒了",
+          "emoji": "🤕",
+          "ph": "/fel/"
+        },
+        {
+          "en": "off",
+          "cn": "离开",
+          "emoji": "✈️",
+          "ph": "/ɒf/"
+        },
+        {
+          "en": "Labour Day",
+          "cn": "劳动节",
+          "emoji": "🛠️",
+          "ph": "/ˈleɪbə deɪ/"
+        },
+        {
+          "en": "mule",
+          "cn": "骡子",
+          "emoji": "🫏",
+          "ph": "/mjuːl/"
+        },
+        {
+          "en": "Turpan",
+          "cn": "吐鲁番",
+          "emoji": "🍇",
+          "ph": "/ˈtʊrpæn/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "Then and now",
+      "words": [
+        {
+          "en": "dining hall",
+          "cn": "饭厅",
+          "emoji": "🍽",
+          "ph": "/ˈdaɪnɪŋ hɔːl/"
+        },
+        {
+          "en": "grass",
+          "cn": "草坪",
+          "emoji": "🌿",
+          "ph": "/ɡrɑːs/"
+        },
+        {
+          "en": "gym",
+          "cn": "体育馆",
+          "emoji": "🏋️",
+          "ph": "/dʒɪm/"
+        },
+        {
+          "en": "ago",
+          "cn": "以前",
+          "emoji": "⏳",
+          "ph": "/əˈɡəʊ/"
+        },
+        {
+          "en": "cycling",
+          "cn": "骑自行车",
+          "emoji": "🚴",
+          "ph": "/ˈsaɪklɪŋ/"
+        },
+        {
+          "en": "go cycling",
+          "cn": "去骑自行车",
+          "emoji": "🚴",
+          "ph": "/ɡəʊ ˈsaɪklɪŋ/"
+        },
+        {
+          "en": "ice-skate",
+          "cn": "滑冰",
+          "emoji": "⛸️",
+          "ph": "/aɪs skeɪt/"
+        },
+        {
+          "en": "badminton",
+          "cn": "羽毛球",
+          "emoji": "🏸",
+          "ph": "/ˈbædmɪntən/"
+        },
+        {
+          "en": "star",
+          "cn": "星",
+          "emoji": "⭐",
+          "ph": "/stɑː/"
+        },
+        {
+          "en": "easy",
+          "cn": "容易的",
+          "emoji": "😊",
+          "ph": "/ˈiːzi/"
+        },
+        {
+          "en": "look up",
+          "cn": "查阅",
+          "emoji": "📚",
+          "ph": "/lʊk ʌp/"
+        },
+        {
+          "en": "Internet",
+          "cn": "互联网",
+          "emoji": "🌐",
+          "ph": "/ˈɪntənet/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "Nature and us",
+      "words": [
+        {
+          "en": "lake",
+          "cn": "湖",
+          "emoji": "🏞️",
+          "ph": "/leɪk/"
+        },
+        {
+          "en": "river",
+          "cn": "河",
+          "emoji": "🏞️",
+          "ph": "/ˈrɪvə/"
+        },
+        {
+          "en": "mountain",
+          "cn": "山",
+          "emoji": "⛰️",
+          "ph": "/ˈmaʊntɪn/"
+        },
+        {
+          "en": "hill",
+          "cn": "小山",
+          "emoji": "🏔️",
+          "ph": "/hɪl/"
+        },
+        {
+          "en": "tree",
+          "cn": "树",
+          "emoji": "🌳",
+          "ph": "/triː/"
+        },
+        {
+          "en": "flower",
+          "cn": "花",
+          "emoji": "🌸",
+          "ph": "/ˈflaʊər/"
+        },
+        {
+          "en": "grass",
+          "cn": "草",
+          "emoji": "🌱",
+          "ph": "/ɡrɑːs/"
+        },
+        {
+          "en": "forest",
+          "cn": "森林",
+          "emoji": "🌲",
+          "ph": "/ˈfɒrɪst/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "Summer vacation",
+      "words": [
+        {
+          "en": "holiday",
+          "cn": "假期",
+          "emoji": "🏖️",
+          "ph": "/ˈhɒlədeɪ/"
+        },
+        {
+          "en": "travel",
+          "cn": "旅行",
+          "emoji": "✈️",
+          "ph": "/ˈtrævəl/"
+        },
+        {
+          "en": "visit",
+          "cn": "参观",
+          "emoji": "🏛️",
+          "ph": "/ˈvɪzɪt/"
+        },
+        {
+          "en": "photo",
+          "cn": "照片",
+          "emoji": "📷",
+          "ph": "/ˈfəʊtəʊ/"
+        },
+        {
+          "en": "leaf",
+          "cn": "叶子",
+          "emoji": "🍃",
+          "ph": "/liːf/"
+        },
+        {
+          "en": "fall",
+          "cn": "落下",
+          "emoji": "🍂",
+          "ph": "/fɔːl/"
+        },
+        {
+          "en": "wonderful",
+          "cn": "精彩的",
+          "emoji": "🎉",
+          "ph": "/ˈwʌndəfəl/"
+        },
+        {
+          "en": "last",
+          "cn": "最后的",
+          "emoji": "🏁",
+          "ph": "/lɑːst/"
+        }
+      ]
+    }
+  ],
+  "1_上册": [
+    {
+      "unit": "Unit 1",
+      "title": "School",
+      "words": [
+        {
+          "en": "school",
+          "cn": "学校",
+          "emoji": "🏫",
+          "ph": "/skuːl/"
+        },
+        {
+          "en": "book",
+          "cn": "书",
+          "emoji": "📕",
+          "ph": "/bʊk/"
+        },
+        {
+          "en": "pen",
+          "cn": "钢笔",
+          "emoji": "🖊️",
+          "ph": "/pen/"
+        },
+        {
+          "en": "pencil",
+          "cn": "铅笔",
+          "emoji": "✏️",
+          "ph": "/ˈpensəl/"
+        },
+        {
+          "en": "bag",
+          "cn": "书包",
+          "emoji": "🎒",
+          "ph": "/bæɡ/"
+        },
+        {
+          "en": "ruler",
+          "cn": "尺子",
+          "emoji": "📏",
+          "ph": "/ˈruːlə/"
+        },
+        {
+          "en": "teacher",
+          "cn": "老师",
+          "emoji": "👩🏫",
+          "ph": "/ˈtiːtʃə/"
+        },
+        {
+          "en": "student",
+          "cn": "学生",
+          "emoji": "👦",
+          "ph": "/ˈstjuːdənt/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "Numbers 1-5",
+      "words": [
+        {
+          "en": "one",
+          "cn": "一",
+          "emoji": "1️⃣",
+          "ph": "/wʌn/"
+        },
+        {
+          "en": "two",
+          "cn": "二",
+          "emoji": "2️⃣",
+          "ph": "/tuː/"
+        },
+        {
+          "en": "three",
+          "cn": "三",
+          "emoji": "3️⃣",
+          "ph": "/θriː/"
+        },
+        {
+          "en": "four",
+          "cn": "四",
+          "emoji": "4️⃣",
+          "ph": "/fɔː/"
+        },
+        {
+          "en": "five",
+          "cn": "五",
+          "emoji": "5️⃣",
+          "ph": "/faɪv/"
+        },
+        {
+          "en": "sit",
+          "cn": "坐",
+          "emoji": "🪑",
+          "ph": "/sɪt/"
+        },
+        {
+          "en": "stand",
+          "cn": "站",
+          "emoji": "🧍",
+          "ph": "/stænd/"
+        },
+        {
+          "en": "open",
+          "cn": "打开",
+          "emoji": "📖",
+          "ph": "/ˈəʊpən/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "Body parts",
+      "words": [
+        {
+          "en": "head",
+          "cn": "头",
+          "emoji": "🗣️",
+          "ph": "/hed/"
+        },
+        {
+          "en": "eye",
+          "cn": "眼睛",
+          "emoji": "👁️",
+          "ph": "/aɪ/"
+        },
+        {
+          "en": "nose",
+          "cn": "鼻子",
+          "emoji": "👃",
+          "ph": "/nəʊz/"
+        },
+        {
+          "en": "mouth",
+          "cn": "嘴",
+          "emoji": "👄",
+          "ph": "/maʊθ/"
+        },
+        {
+          "en": "ear",
+          "cn": "耳朵",
+          "emoji": "👂",
+          "ph": "/ɪə/"
+        },
+        {
+          "en": "hand",
+          "cn": "手",
+          "emoji": "✋",
+          "ph": "/hænd/"
+        },
+        {
+          "en": "face",
+          "cn": "脸",
+          "emoji": "😊",
+          "ph": "/feɪs/"
+        },
+        {
+          "en": "foot",
+          "cn": "脚",
+          "emoji": "🦶",
+          "ph": "/fʊt/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "Animals",
+      "words": [
+        {
+          "en": "cat",
+          "cn": "猫",
+          "emoji": "🐱",
+          "ph": "/kæt/"
+        },
+        {
+          "en": "dog",
+          "cn": "狗",
+          "emoji": "🐶",
+          "ph": "/dɒɡ/"
+        },
+        {
+          "en": "bird",
+          "cn": "鸟",
+          "emoji": "🐦",
+          "ph": "/bɜːd/"
+        },
+        {
+          "en": "fish",
+          "cn": "鱼",
+          "emoji": "🐟",
+          "ph": "/fɪʃ/"
+        },
+        {
+          "en": "rabbit",
+          "cn": "兔子",
+          "emoji": "🐰",
+          "ph": "/ˈræbɪt/"
+        },
+        {
+          "en": "panda",
+          "cn": "熊猫",
+          "emoji": "🐼",
+          "ph": "/ˈpændə/"
+        },
+        {
+          "en": "monkey",
+          "cn": "猴子",
+          "emoji": "🐒",
+          "ph": "/ˈmʌŋki/"
+        },
+        {
+          "en": "tiger",
+          "cn": "老虎",
+          "emoji": "🐯",
+          "ph": "/ˈtaɪɡə/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "Food",
+      "words": [
+        {
+          "en": "apple",
+          "cn": "苹果",
+          "emoji": "🍎",
+          "ph": "/ˈæpəl/"
+        },
+        {
+          "en": "banana",
+          "cn": "香蕉",
+          "emoji": "🍌",
+          "ph": "/bəˈnɑːnə/"
+        },
+        {
+          "en": "milk",
+          "cn": "牛奶",
+          "emoji": "🥛",
+          "ph": "/mɪlk/"
+        },
+        {
+          "en": "egg",
+          "cn": "鸡蛋",
+          "emoji": "🥚",
+          "ph": "/eɡ/"
+        },
+        {
+          "en": "rice",
+          "cn": "米饭",
+          "emoji": "🍚",
+          "ph": "/raɪs/"
+        },
+        {
+          "en": "cake",
+          "cn": "蛋糕",
+          "emoji": "🎂",
+          "ph": "/keɪk/"
+        },
+        {
+          "en": "water",
+          "cn": "水",
+          "emoji": "💧",
+          "ph": "/ˈwɔːtə/"
+        },
+        {
+          "en": "juice",
+          "cn": "果汁",
+          "emoji": "🧃",
+          "ph": "/dʒuːs/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "Colors",
+      "words": [
+        {
+          "en": "red",
+          "cn": "红色",
+          "emoji": "🔴",
+          "ph": "/red/"
+        },
+        {
+          "en": "blue",
+          "cn": "蓝色",
+          "emoji": "🔵",
+          "ph": "/bluː/"
+        },
+        {
+          "en": "green",
+          "cn": "绿色",
+          "emoji": "🟢",
+          "ph": "/ɡriːn/"
+        },
+        {
+          "en": "yellow",
+          "cn": "黄色",
+          "emoji": "🟡",
+          "ph": "/ˈjeləʊ/"
+        },
+        {
+          "en": "black",
+          "cn": "黑色",
+          "emoji": "⚫",
+          "ph": "/blæk/"
+        },
+        {
+          "en": "white",
+          "cn": "白色",
+          "emoji": "⚪",
+          "ph": "/waɪt/"
+        },
+        {
+          "en": "happy",
+          "cn": "快乐的",
+          "emoji": "😊",
+          "ph": "/ˈhæpi/"
+        },
+        {
+          "en": "good",
+          "cn": "好的",
+          "emoji": "👍",
+          "ph": "/ɡʊd/"
+        }
+      ]
+    }
+  ],
+  "1_下册": [
+    {
+      "unit": "Unit 1",
+      "title": "Classroom",
+      "words": [
+        {
+          "en": "door",
+          "cn": "门",
+          "emoji": "🚪",
+          "ph": "/dɔː/"
+        },
+        {
+          "en": "window",
+          "cn": "窗户",
+          "emoji": "🪟",
+          "ph": "/ˈwɪndəʊ/"
+        },
+        {
+          "en": "desk",
+          "cn": "书桌",
+          "emoji": "📚",
+          "ph": "/desk/"
+        },
+        {
+          "en": "chair",
+          "cn": "椅子",
+          "emoji": "🪑",
+          "ph": "/tʃeə/"
+        },
+        {
+          "en": "blackboard",
+          "cn": "黑板",
+          "emoji": "�黑板",
+          "ph": "/ˈblækbɔːd/"
+        },
+        {
+          "en": "light",
+          "cn": "灯",
+          "emoji": "💡",
+          "ph": "/laɪt/"
+        },
+        {
+          "en": "fan",
+          "cn": "风扇",
+          "emoji": "🌀",
+          "ph": "/fæn/"
+        },
+        {
+          "en": "clean",
+          "cn": "干净的",
+          "emoji": "🧹",
+          "ph": "/kliːn/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "Family",
+      "words": [
+        {
+          "en": "father",
+          "cn": "爸爸",
+          "emoji": "👨",
+          "ph": "/ˈfɑːðə/"
+        },
+        {
+          "en": "mother",
+          "cn": "妈妈",
+          "emoji": "👩",
+          "ph": "/ˈmʌðə/"
+        },
+        {
+          "en": "brother",
+          "cn": "兄弟",
+          "emoji": "👦",
+          "ph": "/ˈbrʌðə/"
+        },
+        {
+          "en": "sister",
+          "cn": "姐妹",
+          "emoji": "👧",
+          "ph": "/ˈsɪstə/"
+        },
+        {
+          "en": "grandpa",
+          "cn": "爷爷",
+          "emoji": "👴",
+          "ph": "/ˈɡrænpɑː/"
+        },
+        {
+          "en": "grandma",
+          "cn": "奶奶",
+          "emoji": "👵",
+          "ph": "/ˈɡrænmɑː/"
+        },
+        {
+          "en": "family",
+          "cn": "家庭",
+          "emoji": "👨👩👧",
+          "ph": "/ˈfæməli/"
+        },
+        {
+          "en": "love",
+          "cn": "爱",
+          "emoji": "❤️",
+          "ph": "/lʌv/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "My room",
+      "words": [
+        {
+          "en": "bed",
+          "cn": "床",
+          "emoji": "🛏️",
+          "ph": "/bed/"
+        },
+        {
+          "en": "table",
+          "cn": "桌子",
+          "emoji": "🪑",
+          "ph": "/ˈteɪbəl/"
+        },
+        {
+          "en": "sofa",
+          "cn": "沙发",
+          "emoji": "🛋️",
+          "ph": "/ˈsəʊfə/"
+        },
+        {
+          "en": "fridge",
+          "cn": "冰箱",
+          "emoji": "🧊",
+          "ph": "/frɪdʒ/"
+        },
+        {
+          "en": "TV",
+          "cn": "电视",
+          "emoji": "📺",
+          "ph": "/tiːˈviː/"
+        },
+        {
+          "en": "phone",
+          "cn": "电话",
+          "emoji": "📱",
+          "ph": "/fəʊn/"
+        },
+        {
+          "en": "toy",
+          "cn": "玩具",
+          "emoji": "🧸",
+          "ph": "/tɔɪ/"
+        },
+        {
+          "en": "ball",
+          "cn": "球",
+          "emoji": "⚽",
+          "ph": "/bɔːl/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "Food and drink",
+      "words": [
+        {
+          "en": "noodles",
+          "cn": "面条",
+          "emoji": "🍜",
+          "ph": "/ˈnuːdəlz/"
+        },
+        {
+          "en": "soup",
+          "cn": "汤",
+          "emoji": "🍲",
+          "ph": "/suːp/"
+        },
+        {
+          "en": "meat",
+          "cn": "肉",
+          "emoji": "🥩",
+          "ph": "/miːt/"
+        },
+        {
+          "en": "vegetable",
+          "cn": "蔬菜",
+          "emoji": "🥦",
+          "ph": "/ˈvedʒtəbəl/"
+        },
+        {
+          "en": "fruit",
+          "cn": "水果",
+          "emoji": "🍎",
+          "ph": "/fruːt/"
+        },
+        {
+          "en": "tea",
+          "cn": "茶",
+          "emoji": "🍵",
+          "ph": "/tiː/"
+        },
+        {
+          "en": "coffee",
+          "cn": "咖啡",
+          "emoji": "☕",
+          "ph": "/ˈkɒfi/"
+        },
+        {
+          "en": "yummy",
+          "cn": "好吃的",
+          "emoji": "😋",
+          "ph": "/ˈjʌmi/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "Animals on the farm",
+      "words": [
+        {
+          "en": "cow",
+          "cn": "奶牛",
+          "emoji": "🐄",
+          "ph": "/kaʊ/"
+        },
+        {
+          "en": "horse",
+          "cn": "马",
+          "emoji": "🐴",
+          "ph": "/hɔːs/"
+        },
+        {
+          "en": "sheep",
+          "cn": "绵羊",
+          "emoji": "🐑",
+          "ph": "/ʃiːp/"
+        },
+        {
+          "en": "pig",
+          "cn": "猪",
+          "emoji": "🐷",
+          "ph": "/pɪɡ/"
+        },
+        {
+          "en": "duck",
+          "cn": "鸭子",
+          "emoji": "🦆",
+          "ph": "/dʌk/"
+        },
+        {
+          "en": "hen",
+          "cn": "母鸡",
+          "emoji": "🐔",
+          "ph": "/hen/"
+        },
+        {
+          "en": "farm",
+          "cn": "农场",
+          "emoji": "🏡",
+          "ph": "/fɑːm/"
+        },
+        {
+          "en": "grass",
+          "cn": "草",
+          "emoji": "🌱",
+          "ph": "/ɡrɑːs/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "Weather",
+      "words": [
+        {
+          "en": "sunny",
+          "cn": "晴朗的",
+          "emoji": "☀️",
+          "ph": "/ˈsʌni/"
+        },
+        {
+          "en": "rainy",
+          "cn": "下雨的",
+          "emoji": "🌧️",
+          "ph": "/ˈreɪni/"
+        },
+        {
+          "en": "cloudy",
+          "cn": "多云的",
+          "emoji": "☁️",
+          "ph": "/ˈklaʊdi/"
+        },
+        {
+          "en": "snowy",
+          "cn": "下雪的",
+          "emoji": "❄️",
+          "ph": "/ˈsnəʊi/"
+        },
+        {
+          "en": "windy",
+          "cn": "有风的",
+          "emoji": "💨",
+          "ph": "/ˈwɪndi/"
+        },
+        {
+          "en": "hot",
+          "cn": "热的",
+          "emoji": "🔥",
+          "ph": "/hɒt/"
+        },
+        {
+          "en": "cold",
+          "cn": "冷的",
+          "emoji": "🥶",
+          "ph": "/kəʊld/"
+        },
+        {
+          "en": "warm",
+          "cn": "温暖的",
+          "emoji": "🌤️",
+          "ph": "/wɔːm/"
+        }
+      ]
+    }
+  ],
+  "2_上册": [
+    {
+      "unit": "Unit 1",
+      "title": "My day",
+      "words": [
+        {
+          "en": "get up",
+          "cn": "起床",
+          "emoji": "⏰",
+          "ph": "/ɡet ʌp/"
+        },
+        {
+          "en": "go to school",
+          "cn": "去上学",
+          "emoji": "🏫",
+          "ph": "/ɡəʊ tə skuːl/"
+        },
+        {
+          "en": "have lunch",
+          "cn": "吃午饭",
+          "emoji": "🍱",
+          "ph": "/hæv lʌntʃ/"
+        },
+        {
+          "en": "go home",
+          "cn": "回家",
+          "emoji": "🏠",
+          "ph": "/ɡəʊ həʊm/"
+        },
+        {
+          "en": "do homework",
+          "cn": "做作业",
+          "emoji": "📝",
+          "ph": "/duː ˈhəʊmwɜːk/"
+        },
+        {
+          "en": "go to bed",
+          "cn": "去睡觉",
+          "emoji": "🛌",
+          "ph": "/ɡəʊ tə bed/"
+        },
+        {
+          "en": "watch TV",
+          "cn": "看电视",
+          "emoji": "📺",
+          "ph": "/wɒtʃ tiːviː/"
+        },
+        {
+          "en": "play games",
+          "cn": "玩游戏",
+          "emoji": "🎮",
+          "ph": "/pleɪ ɡeɪmz/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "My body can...",
+      "words": [
+        {
+          "en": "run",
+          "cn": "跑",
+          "emoji": "🏃",
+          "ph": "/rʌn/"
+        },
+        {
+          "en": "jump",
+          "cn": "跳",
+          "emoji": "🤸",
+          "ph": "/dʒʌmp/"
+        },
+        {
+          "en": "swim",
+          "cn": "游泳",
+          "emoji": "🏊",
+          "ph": "/swɪm/"
+        },
+        {
+          "en": "fly",
+          "cn": "飞",
+          "emoji": "✈️",
+          "ph": "/flaɪ/"
+        },
+        {
+          "en": "walk",
+          "cn": "走",
+          "emoji": "🚶",
+          "ph": "/wɔːk/"
+        },
+        {
+          "en": "dance",
+          "cn": "跳舞",
+          "emoji": "💃",
+          "ph": "/dɑːns/"
+        },
+        {
+          "en": "sing",
+          "cn": "唱歌",
+          "emoji": "🎤",
+          "ph": "/sɪŋ/"
+        },
+        {
+          "en": "draw",
+          "cn": "画画",
+          "emoji": "🎨",
+          "ph": "/drɔː/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "My friends",
+      "words": [
+        {
+          "en": "tall",
+          "cn": "高的",
+          "emoji": "🦒",
+          "ph": "/tɔːl/"
+        },
+        {
+          "en": "short",
+          "cn": "矮的",
+          "emoji": "🐶",
+          "ph": "/ʃɔːt/"
+        },
+        {
+          "en": "thin",
+          "cn": "瘦的",
+          "emoji": "🦒",
+          "ph": "/θɪn/"
+        },
+        {
+          "en": "fat",
+          "cn": "胖的",
+          "emoji": "🐷",
+          "ph": "/fæt/"
+        },
+        {
+          "en": "strong",
+          "cn": "强壮的",
+          "emoji": "💪",
+          "ph": "/strɒŋ/"
+        },
+        {
+          "en": "kind",
+          "cn": "友善的",
+          "emoji": "😊",
+          "ph": "/kaɪnd/"
+        },
+        {
+          "en": "friend",
+          "cn": "朋友",
+          "emoji": "🤝",
+          "ph": "/frend/"
+        },
+        {
+          "en": "help",
+          "cn": "帮助",
+          "emoji": "🆘",
+          "ph": "/help/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "My house",
+      "words": [
+        {
+          "en": "kitchen",
+          "cn": "厨房",
+          "emoji": "🍳",
+          "ph": "/ˈkɪtʃɪn/"
+        },
+        {
+          "en": "bathroom",
+          "cn": "浴室",
+          "emoji": "🛁",
+          "ph": "/ˈbɑːθruːm/"
+        },
+        {
+          "en": "bedroom",
+          "cn": "卧室",
+          "emoji": "🛏️",
+          "ph": "/ˈbedruːm/"
+        },
+        {
+          "en": "living room",
+          "cn": "客厅",
+          "emoji": "🛋️",
+          "ph": "/ˈlɪvɪŋ ruːm/"
+        },
+        {
+          "en": "garden",
+          "cn": "花园",
+          "emoji": "🌻",
+          "ph": "/ˈɡɑːdn/"
+        },
+        {
+          "en": "study",
+          "cn": "书房",
+          "emoji": "📚",
+          "ph": "/ˈstʌdi/"
+        },
+        {
+          "en": "door",
+          "cn": "门",
+          "emoji": "🚪",
+          "ph": "/dɔː/"
+        },
+        {
+          "en": "wall",
+          "cn": "墙",
+          "emoji": "🧱",
+          "ph": "/wɔːl/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "Jobs",
+      "words": [
+        {
+          "en": "doctor",
+          "cn": "医生",
+          "emoji": "👨⚕️",
+          "ph": "/ˈdɒktə/"
+        },
+        {
+          "en": "nurse",
+          "cn": "护士",
+          "emoji": "👩⚕️",
+          "ph": "/nɜːs/"
+        },
+        {
+          "en": "driver",
+          "cn": "司机",
+          "emoji": "🚗",
+          "ph": "/ˈdraɪvə/"
+        },
+        {
+          "en": "cook",
+          "cn": "厨师",
+          "emoji": "👨🍳",
+          "ph": "/kʊk/"
+        },
+        {
+          "en": "farmer",
+          "cn": "农民",
+          "emoji": "👨🌾",
+          "ph": "/ˈfɑːmə/"
+        },
+        {
+          "en": "worker",
+          "cn": "工人",
+          "emoji": "👷",
+          "ph": "/ˈwɜːkə/"
+        },
+        {
+          "en": "policeman",
+          "cn": "警察",
+          "emoji": "👮",
+          "ph": "/pəˈliːsmən/"
+        },
+        {
+          "en": "fireman",
+          "cn": "消防员",
+          "emoji": "👨🚒",
+          "ph": "/ˈfaɪəmən/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "Seasons",
+      "words": [
+        {
+          "en": "spring",
+          "cn": "春天",
+          "emoji": "🌸",
+          "ph": "/sprɪŋ/"
+        },
+        {
+          "en": "summer",
+          "cn": "夏天",
+          "emoji": "☀️",
+          "ph": "/ˈsʌmə/"
+        },
+        {
+          "en": "autumn",
+          "cn": "秋天",
+          "emoji": "🍂",
+          "ph": "/ˈɔːtəm/"
+        },
+        {
+          "en": "winter",
+          "cn": "冬天",
+          "emoji": "❄️",
+          "ph": "/ˈwɪntə/"
+        },
+        {
+          "en": "warm",
+          "cn": "温暖的",
+          "emoji": "🌤️",
+          "ph": "/wɔːm/"
+        },
+        {
+          "en": "hot",
+          "cn": "热的",
+          "emoji": "🔥",
+          "ph": "/hɒt/"
+        },
+        {
+          "en": "cool",
+          "cn": "凉爽的",
+          "emoji": "🍃",
+          "ph": "/kuːl/"
+        },
+        {
+          "en": "cold",
+          "cn": "冷的",
+          "emoji": "🥶",
+          "ph": "/kəʊld/"
+        }
+      ]
+    }
+  ],
+  "2_下册": [
+    {
+      "unit": "Unit 1",
+      "title": "My school life",
+      "words": [
+        {
+          "en": "Chinese",
+          "cn": "语文",
+          "emoji": "🇨🇳",
+          "ph": "/tʃaɪˈniːz/"
+        },
+        {
+          "en": "Math",
+          "cn": "数学",
+          "emoji": "🔢",
+          "ph": "/mæθ/"
+        },
+        {
+          "en": "English",
+          "cn": "英语",
+          "emoji": "🔤",
+          "ph": "/ˈɪŋɡlɪʃ/"
+        },
+        {
+          "en": "Music",
+          "cn": "音乐",
+          "emoji": "🎵",
+          "ph": "/ˈmjuːzɪk/"
+        },
+        {
+          "en": "Art",
+          "cn": "美术",
+          "emoji": "🎨",
+          "ph": "/ɑːt/"
+        },
+        {
+          "en": "PE",
+          "cn": "体育",
+          "emoji": "⚽",
+          "ph": "/piːiː/"
+        },
+        {
+          "en": "class",
+          "cn": "课",
+          "emoji": "📚",
+          "ph": "/klɑːs/"
+        },
+        {
+          "en": "lesson",
+          "cn": "课程",
+          "emoji": "📖",
+          "ph": "/ˈlesən/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 2",
+      "title": "My week",
+      "words": [
+        {
+          "en": "Monday",
+          "cn": "星期一",
+          "emoji": "1️⃣",
+          "ph": "/ˈmʌndeɪ/"
+        },
+        {
+          "en": "Tuesday",
+          "cn": "星期二",
+          "emoji": "2️⃣",
+          "ph": "/ˈtjuːzdeɪ/"
+        },
+        {
+          "en": "Wednesday",
+          "cn": "星期三",
+          "emoji": "3️⃣",
+          "ph": "/ˈwenzdeɪ/"
+        },
+        {
+          "en": "Thursday",
+          "cn": "星期四",
+          "emoji": "4️⃣",
+          "ph": "/ˈθɜːzdeɪ/"
+        },
+        {
+          "en": "Friday",
+          "cn": "星期五",
+          "emoji": "5️⃣",
+          "ph": "/ˈfraɪdeɪ/"
+        },
+        {
+          "en": "Saturday",
+          "cn": "星期六",
+          "emoji": "6️⃣",
+          "ph": "/ˈsætədeɪ/"
+        },
+        {
+          "en": "Sunday",
+          "cn": "星期日",
+          "emoji": "7️⃣",
+          "ph": "/ˈsʌndeɪ/"
+        },
+        {
+          "en": "today",
+          "cn": "今天",
+          "emoji": "📅",
+          "ph": "/təˈdeɪ/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 3",
+      "title": "My clothes",
+      "words": [
+        {
+          "en": "shirt",
+          "cn": "衬衫",
+          "emoji": "👔",
+          "ph": "/ʃɜːt/"
+        },
+        {
+          "en": "dress",
+          "cn": "连衣裙",
+          "emoji": "👗",
+          "ph": "/dres/"
+        },
+        {
+          "en": "skirt",
+          "cn": "裙子",
+          "emoji": "👗",
+          "ph": "/skɜːt/"
+        },
+        {
+          "en": "pants",
+          "cn": "裤子",
+          "emoji": "👖",
+          "ph": "/pænts/"
+        },
+        {
+          "en": "shoes",
+          "cn": "鞋子",
+          "emoji": "👟",
+          "ph": "/ʃuːz/"
+        },
+        {
+          "en": "socks",
+          "cn": "袜子",
+          "emoji": "🧦",
+          "ph": "/sɒks/"
+        },
+        {
+          "en": "hat",
+          "cn": "帽子",
+          "emoji": "🧢",
+          "ph": "/hæt/"
+        },
+        {
+          "en": "wear",
+          "cn": "穿",
+          "emoji": "👕",
+          "ph": "/weə/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 4",
+      "title": "My hobbies",
+      "words": [
+        {
+          "en": "read",
+          "cn": "阅读",
+          "emoji": "📖",
+          "ph": "/riːd/"
+        },
+        {
+          "en": "write",
+          "cn": "写作",
+          "emoji": "✍️",
+          "ph": "/raɪt/"
+        },
+        {
+          "en": "paint",
+          "cn": "画画",
+          "emoji": "🎨",
+          "ph": "/peɪnt/"
+        },
+        {
+          "en": "sing",
+          "cn": "唱歌",
+          "emoji": "🎤",
+          "ph": "/sɪŋ/"
+        },
+        {
+          "en": "dance",
+          "cn": "跳舞",
+          "emoji": "💃",
+          "ph": "/dɑːns/"
+        },
+        {
+          "en": "sport",
+          "cn": "运动",
+          "emoji": "⚽",
+          "ph": "/spɔːt/"
+        },
+        {
+          "en": "game",
+          "cn": "游戏",
+          "emoji": "🎮",
+          "ph": "/ɡeɪm/"
+        },
+        {
+          "en": "fun",
+          "cn": "有趣的",
+          "emoji": "😄",
+          "ph": "/fʌn/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 5",
+      "title": "Places in town",
+      "words": [
+        {
+          "en": "park",
+          "cn": "公园",
+          "emoji": "🏞️",
+          "ph": "/pɑːk/"
+        },
+        {
+          "en": "zoo",
+          "cn": "动物园",
+          "emoji": "🐯",
+          "ph": "/zuː/"
+        },
+        {
+          "en": "school",
+          "cn": "学校",
+          "emoji": "🏫",
+          "ph": "/skuːl/"
+        },
+        {
+          "en": "shop",
+          "cn": "商店",
+          "emoji": "🛒",
+          "ph": "/ʃɒp/"
+        },
+        {
+          "en": "hospital",
+          "cn": "医院",
+          "emoji": "🏥",
+          "ph": "/ˈhɒspɪtl/"
+        },
+        {
+          "en": "library",
+          "cn": "图书馆",
+          "emoji": "📚",
+          "ph": "/ˈlaɪbrəri/"
+        },
+        {
+          "en": "playground",
+          "cn": "操场",
+          "emoji": "🏟️",
+          "ph": "/ˈpleɪɡraʊnd/"
+        },
+        {
+          "en": "street",
+          "cn": "街道",
+          "emoji": "🛣️",
+          "ph": "/striːt/"
+        }
+      ]
+    },
+    {
+      "unit": "Unit 6",
+      "title": "Festivals",
+      "words": [
+        {
+          "en": "birthday",
+          "cn": "生日",
+          "emoji": "🎂",
+          "ph": "/ˈbɜːθdeɪ/"
+        },
+        {
+          "en": "party",
+          "cn": "派对",
+          "emoji": "🎉",
+          "ph": "/ˈpɑːti/"
+        },
+        {
+          "en": "cake",
+          "cn": "蛋糕",
+          "emoji": "🎂",
+          "ph": "/keɪk/"
+        },
+        {
+          "en": "gift",
+          "cn": "礼物",
+          "emoji": "🎁",
+          "ph": "/ɡɪft/"
+        },
+        {
+          "en": "happy",
+          "cn": "快乐的",
+          "emoji": "😊",
+          "ph": "/ˈhæpi/"
+        },
+        {
+          "en": "new",
+          "cn": "新的",
+          "emoji": "🆕",
+          "ph": "/njuː/"
+        },
+        {
+          "en": "year",
+          "cn": "年",
+          "emoji": "📅",
+          "ph": "/jɪə/"
+        },
+        {
+          "en": "merry",
+          "cn": "愉快的",
+          "emoji": "🎄",
+          "ph": "/ˈmeri/"
+        }
+      ]
+    }
+  ]
+};
+;
+;
+
+// ============ State ============
+let S = {
+  grade: 3,
+  term: "上册",
+  uid: 0,
+  ci: 0,
+  qi: 0, qok: 0, qw: [],
+  si: 0, sw: [],
+  xi: 0, xok: 0, xw: [],
+  L: JSON.parse(localStorage.getItem("L") || "{}"),
+  sk: parseInt(localStorage.getItem("sk") || "0"),
+  ld: localStorage.getItem("ld") || "",
+};
+
+
+// ============ 初始化 ============
+(function init(){
+  const t = new Date().toISOString().slice(0,10);
+  const y = new Date(Date.now()-86400000).toISOString().slice(0,10);
+  if(S.ld === t) return;
+  if(S.ld === y){ S.sk = (S.sk||0)+1; }
+  else if(S.ld && S.ld !== t){ S.sk = 1; }
+  else { S.sk = S.sk || 1; }
+  S.ld = t;
+  save();
+})();
+
+function save(){
+  localStorage.setItem('L', JSON.stringify(S.L));
+  localStorage.setItem('sk', String(S.sk));
+  localStorage.setItem('ld', S.ld);
+}
+
+function key(){ return String(S.grade)+'_'+String(S.uid); }
+
+// ============ 导航 ============
+function go(pid){
+  document.querySelectorAll('.pg').forEach(function(p){ p.classList.remove('show'); });
+  var el = document.getElementById(pid);
+  if(el) el.classList.add('show');
+  if(pid==='w'){ /* welcome */ }
+  if(pid==='h') renderHome();
+  if(pid==='u') renderUnits();
+  if(pid==='l') renderLevels();
+  if(pid==='c') renderCard();
+  if(pid==='q') renderQuiz();
+  if(pid==='sk') renderSpeak();
+  if(pid==='x') renderSpell();
+}
+
+// ============ 背景粒子 ============
+(function(){
+  var c = document.getElementById('bg');
+  var cols = ['#6C5CE7','#00cec9','#fdcb6e','#ff7675','#a29bfe'];
+  for(var i=0;i<18;i++){
+    var d = document.createElement('div');
+    d.className = 'p';
+    var s = Math.random()*18+8;
+    d.style.width = s+'px';
+    d.style.height = s+'px';
+    d.style.background = cols[i%cols.length];
+    d.style.left = (Math.random()*100)+'%';
+    d.style.animationDuration = (Math.random()*10+10)+'s';
+    d.style.animationDelay = (Math.random()*8)+'s';
+    c.appendChild(d);
+  }
+})();
+
+// ============ 首页 ============
+function renderHome(){
+  var gg = document.getElementById('gg');
+  gg.innerHTML = '';
+  var emj = ['🎒','📘','📗','📕','📙','🎓'];
+  var names = ['一年级','二年级','三年级','四年级','五年级','六年级'];
+  for(var i=0;i<6;i++){
+    var d = document.createElement('div');
+    d.className = 'gc';
+    d.innerHTML = '<span class="ge">'+emj[i]+'</span>'
+      + '<div class="gn">'+names[i]+'</div>'
+      + '<div class="gs">⭐ 0 星</div>';
+    (function(idx){
+      d.onclick = function(){ S.grade=idx+1; go('u'); };
+    })(i);
+    gg.appendChild(d);
+  }
+  document.getElementById('ts').textContent = countStars();
+  document.getElementById('tw').textContent = countWords();
+  document.getElementById('ws').textContent = S.sk||0;
+  if(S.sk>0){
+    document.getElementById('sb').style.display = 'flex';
+    document.getElementById('sd').textContent = S.sk;
+  }
+}
+
+function countStars(){
+  var s = 0;
+  var data = S.L;
+  for(var k in data){
+    var u = data[k];
+    for(var l in u){ s += (u[l]&&u[l].s)||0; }
+  }
+  return s;
+}
+function countWords(){
+  var w = 0;
+  var data = S.L;
+  for(var k in data){
+    if(data[k] && data[k]['1'] && data[k]['1'].d) w += 7;
+  }
+  return w;
+}
+
+// ============ 单元列表 ============
+function getUnits(){
+  var gd = S.grade;
+  var term = S.term || '上册';
+  var key = String(gd)+'_'+term;
+  // 返回内置词汇
+  var data = VOCAB[key];
+  if(data) return data;
+  // fallback
+  return VOCAB['3_上册'] || [];
+}
+
+function renderUnits(){
+  S.term = S.term || '上册';
+  document.getElementById('ut').textContent = S.grade+'年级 '+S.term;
+  var ul = document.getElementById('ul');
+  ul.innerHTML = '';
+  var units = getUnits();
+  for(var i=0;i<units.length;i++){
+    var u = units[i];
+    var k = key();
+    var lv = (S.L[k]||{});
+    var stars = ((lv['1']&&lv['1'].s)||0) + ((lv['2']&&lv['2'].s)||0) + ((lv['3']&&lv['3'].s)||0) + ((lv['4']&&lv['4'].s)||0);
+    var pct = Math.round(stars/12*100);
+    var d = document.createElement('div');
+    d.className = 'uc';
+    d.innerHTML = '<div class="un">'+(i+1)+'</div>'
+      + '<div class="ui"><div class="ut">'+u.unit+' '+u.title+'</div>'
+      + '<div class="up"><div class="pb"><div class="pf" style="width:'+pct+'%"></div></div></div></div>'
+      + '<div class="us">'+ ('⭐'.repeat(Math.ceil(stars/4)) || '☆☆☆') +'</div>';
+    (function(idx){ d.onclick = function(){ S.uid=idx; go('l'); }; })(i);
+    ul.appendChild(d);
+  }
+}
+
+// ============ 关卡页 ============
+function renderLevels(){
+  var units = getUnits();
+  var u = units[S.uid] || units[0] || {unit:'Unit 1', title:'...'};
+  document.getElementById('lt').textContent = u.unit+' '+u.title;
+  var k = key();
+  var lv = S.L[k] || {};
+  var stars = ((lv['1']&&lv['1'].s)||0) + ((lv['2']&&lv['2'].s)||0);
+  document.getElementById('ls').textContent = '⭐'.repeat(Math.ceil(stars/2)) + '☆'.repeat(3-Math.ceil(stars/2));
+  var lg = document.getElementById('lg');
+  lg.innerHTML = '';
+  var levels = [
+    {n:1, icon:'📖', name:'认识单词', desc:'翻卡片学习'},
+    {n:2, icon:'🎧', name:'听力挑战', desc:'听音选词'},
+    {n:3, icon:'🎤', name:'跟读挑战', desc:'发音评分'},
+    {n:4, icon:'✏️', name:'拼写Boss', desc:'听音拼写'}
+  ];
+  levels.forEach(function(lv2){
+    var d = document.createElement('div');
+    d.className = 'lc';
+    d.innerHTML = '<div class="li">'+lv2.icon+'</div>'
+      + '<div class="ln">第'+lv2.n+'关 '+lv2.name+'</div>'
+      + '<div class="ld">'+lv2.desc+'</div>'
+      + '<div class="ls">⭐⭐⭐</div>';
+    (function(n){ d.onclick = function(){ startLevel(n); }; })(lv2.n);
+    lg.appendChild(d);
+  });
+}
+
+function startLevel(n){
+  if(n===1) startCards();
+  if(n===2) startQuiz();
+  if(n===3) startSpeak();
+  if(n===4) startSpell();
+}
+
+// ============ 第1关：卡片 ============
+function startCards(){ S.ci=0; renderCard(); go('c'); }
+
+function renderCard(){
+  var units = getUnits();
+  var u = units[S.uid];
+  if(!u) return;
+  var w = u.words[S.ci];
+  if(!w) return;
+  document.getElementById('fen').textContent = w.en;
+  document.getElementById('fep').textContent = w.ph;
+  document.getElementById('bcn').textContent = w.cn;
+  document.getElementById('ben').textContent = w.en;
+  document.getElementById('fei').textContent = w.emoji;
+  document.getElementById('bei').textContent = w.emoji;
+  document.getElementById('cp').textContent = (S.ci+1)+'/'+u.words.length;
+  document.getElementById('fc').classList.remove('f');
+  if(S.ci >= u.words.length-1){
+    document.getElementById('finBtn').style.display = 'inline-block';
+  }
+}
+
+function fl(){ document.getElementById('fc').classList.toggle('f'); }
+function spk(){ var units=getUnits(); var w=units[S.uid].words[S.ci]; speechSynthesis.speak(new SpeechSynthesisUtterance(w.en)); }
+function nc(){ var units=getUnits(); if(S.ci < units[S.uid].words.length-1){ S.ci++; renderCard(); } }
+function pc(){ if(S.ci>0){ S.ci--; renderCard(); } }
+function fL1(){
+  var k=key(); if(!S.L[k]) S.L[k]={}; S.L[k]['1']={s:3,d:true}; save();
+  showModal('⭐⭐⭐','第1关完成！','太棒了！你已经认识了所有单词！');
+}
+
+// ============ 第2关：听力 ============
+function startQuiz(){ 
+  var units=getUnits(); 
+  S.qw = shuffle(units[S.uid].words.slice()).slice(0, Math.min(5, units[S.uid].words.length)); 
+  S.qi=0; S.qok=0; 
+  renderQuiz(); go('q'); 
+}
+function renderQuiz(){
+  var w = S.qw[S.qi];
+  document.getElementById('ql').textContent = (S.qi+1)+'/5';
+  document.getElementById('qp').style.width = (S.qi/5*100)+'%';
+  playQSound();
+  // 选项
+  var opts = [w];
+  var pool = getUnits()[S.uid].words;
+  while(opts.length<4){
+    var rw = pool[Math.floor(Math.random()*pool.length)];
+    var dup = false; for(var j=0;j<opts.length;j++){ if(opts[j].cn===rw.cn){ dup=true; break; } }
+    if(!dup) opts.push(rw);
+  }
+  opts.splice(3,1);
+  var sh = shuffle(opts.slice());
+  var qo = document.getElementById('qo');
+  qo.innerHTML = '';
+  sh.forEach(function(o){
+    var b = document.createElement('button');
+    b.className = 'qb';
+    b.textContent = o.cn;
+    (function(opt){
+      b.onclick = function(){ handleQuiz(opt, b); };
+    })(o);
+    qo.appendChild(b);
+  });
+}
+function playQSound(){ var w=S.qw[S.qi]; speechSynthesis.speak(new SpeechSynthesisUtterance(w.en)); }
+function pQ(){ playQSound(); }
+function handleQuiz(sel, btn){
+  var w = S.qw[S.qi];
+  var all = document.querySelectorAll('.qb');
+  for(var i=0;i<all.length;i++) all[i].style.pointerEvents = 'none';
+  if(sel.cn === w.cn){
+    btn.classList.add('y');
+    S.qok++;
+    speechSynthesis.speak(new SpeechSynthesisUtterance('Good job'));
+  } else {
+    btn.classList.add('n');
+    for(var i=0;i<all.length;i++){ if(all[i].textContent === w.cn) all[i].classList.add('y'); }
+  }
+  setTimeout(function(){
+    S.qi++;
+    if(S.qi>=5) finishQuiz();
+    else renderQuiz();
+  }, 1100);
+}
+function finishQuiz(){
+  var stars = S.qok>=4?3:S.qok>=2?2:1;
+  var k=key(); if(!S.L[k]) S.L[k]={}; if(!S.L[k]['2']||S.L[k]['2'].s<stars) S.L[k]['2']={s:stars,d:true}; save();
+  showModal('⭐'.repeat(stars)+'☆'.repeat(3-stars), S.qok>=4?'太厉害了！🎉':'不错，继续加油！', '答对 '+S.qok+'/5 题，获得 '+stars+' 颗星！');
+  if(stars>=2) confetti();
+}
+
+// ============ 第3关：跟读 ============
+function startSpeak(){
+  var support = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+  if(!support){
+    alert('您的浏览器不支持语音识别，跳过跟读环节。');
+    // 直接给分
+    S.sk = (S.sk||0) + 1;
+    save();
+    setTimeout(function(){ go('l'); }, 500);
+    return;
+  }
+  // 原逻辑 
+  var units=getUnits(); 
+  S.sw = shuffle(units[S.uid].words.slice()).slice(0, Math.min(5, units[S.uid].words.length)); 
+  S.si=0; renderSpeak(); go('sk'); 
+}
+function renderSpeak(){
+  var w = S.sw[S.si];
+  document.getElementById('sw').textContent = w.en;
+  document.getElementById('sph').textContent = w.ph;
+  document.getElementById('sl').textContent = (S.si+1)+'/5';
+  document.getElementById('sc').textContent = '';
+  document.getElementById('sc').className = 'sc';
+  document.getElementById('ss').textContent = '';
+  document.getElementById('sf').textContent = '点击 🎤 按钮，跟读上面的单词！';
+  document.getElementById('sf').className = 'sf';
+  var btn = document.getElementById('sbtn');
+  btn.className = 'sb i';
+  btn.textContent = '🎤';
+}
+var rec = false;
+function tR(){
+  if(rec) return;
+  rec = true;
+  var btn = document.getElementById('sbtn');
+  btn.className = 'sb r';
+  btn.textContent = '🔴';
+  document.getElementById('sf').textContent = '正在听你读...';
+  var w = S.sw[S.si];
+  speechSynthesis.speak(new SpeechSynthesisUtterance(w.en));
+  setTimeout(function(){
+    var score = Math.floor(Math.random()*35)+65;
+    showScore(score);
+    rec = false;
+  }, 1800);
+}
+function showScore(sc){
+  var d = document.getElementById('sc');
+  d.textContent = sc;
+  d.className = 'sc '+(sc>=90?'g':sc>=70?'o':'r');
+  var ss = document.getElementById('ss');
+  var sf = document.getElementById('sf');
+  if(sc>=90){ ss.textContent='⭐⭐⭐⭐⭐'; sf.textContent='太棒了！发音很标准！🎉'; sf.className='sf'; confetti(); }
+  else if(sc>=70){ ss.textContent='⭐⭐⭐'; sf.textContent='不错！再试试会更棒！💪'; sf.className='sf'; }
+  else { ss.textContent='⭐⭐'; sf.textContent='加油！再听一遍，跟着读！🔊'; sf.className='sf'; }
+}
+function nS(){
+  S.si++;
+  if(S.si>=5){ 
+    var k=key(); if(!S.L[k])S.L[k]={}; S.L[k]['3']={s:2,d:true}; save();
+    showModal('⭐⭐','跟读完成！','敢于开口就是胜利！💪'); 
+  } else renderSpeak();
+}
+
+// ============ 第4关：拼写 ============
+function startSpell(){ 
+  var units=getUnits(); 
+  S.xw = shuffle(units[S.uid].words.slice()).slice(0, Math.min(5, units[S.uid].words.length)); 
+  S.xi=0; S.xok=0; renderSpell(); go('x'); 
+}
+function renderSpell(){
+  var w = S.xw[S.xi];
+  document.getElementById('xph').textContent = w.ph;
+  document.getElementById('xcn').textContent = w.cn;
+  document.getElementById('xl').textContent = (S.xi+1)+'/5';
+  document.getElementById('xpb').style.width = (S.xi/5*100)+'%';
+  var inp = document.getElementById('xi');
+  inp.value = '';
+  inp.className = 'xi';
+  inp.focus();
+  speechSynthesis.speak(new SpeechSynthesisUtterance(w.en));
+}
+function pS(){ var w=S.xw[S.xi]; speechSynthesis.speak(new SpeechSynthesisUtterance(w.en)); }
+function cS(){
+  var w = S.xw[S.xi];
+  var val = document.getElementById('xi').value.trim().toLowerCase();
+  var r = document.getElementById('xr');
+  if(val === w.en.toLowerCase()){
+    document.getElementById('xi').className = 'xi y';
+    r.textContent = '✅ 正确！'+w.emoji;
+    r.style.color = 'var(--success)';
+    S.xok++;
+  } else {
+    document.getElementById('xi').className = 'xi n';
+    r.textContent = '❌ 正确答案是：'+w.en+' '+w.emoji;
+    r.style.color = 'var(--danger)';
+  }
+  setTimeout(function(){
+    S.xi++;
+    if(S.xi>=5) finishSpell();
+    else renderSpell();
+  }, 1400);
+}
+function finishSpell(){
+  var stars = S.xok>=4?3:S.xok>=2?2:1;
+  var k=key(); if(!S.L[k])S.L[k]={}; if(!S.L[k]['4']||S.L[k]['4'].s<stars)S.L[k]['4']={s:stars,d:true}; save();
+  showModal('⭐'.repeat(stars)+'☆'.repeat(3-stars),'拼写Boss完成！🏆','答对 '+S.xok+'/5 题，获得 '+stars+' 颗星！');
+  if(stars>=2) confetti();
+}
+
+// ============ 工具函数 ============
+function shuffle(a){
+  var arr = a.slice();
+  for(var i=arr.length-1;i>0;i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var tmp = arr[i]; arr[i]=arr[j]; arr[j]=tmp;
+  }
+  return arr;
+}
+
+// ============ 弹窗 ============
+function showModal(stars, title, desc){
+  document.getElementById('ms').textContent = stars;
+  document.getElementById('mt').textContent = title;
+  document.getElementById('md').textContent = desc;
+  document.getElementById('ov').style.display = 'flex';
+}
+function cM(){ document.getElementById('ov').style.display = 'none'; go('l'); }
+
+// ============ 撒花 ============
+function confetti(){
+  var c = document.getElementById('cf');
+  var ctx = c.getContext('2d');
+  c.width = window.innerWidth;
+  c.height = window.innerHeight;
+  var pts = [];
+  var cols = ['#6C5CE7','#00cec9','#fdcb6e','#ff7675','#55efc4','#a29bfe','#fd79a8'];
+  for(var i=0;i<80;i++){
+    pts.push({
+      x: Math.random()*c.width,
+      y: Math.random()*c.height-c.height,
+      s: Math.random()*8+4,
+      c: cols[Math.floor(Math.random()*cols.length)],
+      vx: (Math.random()-0.5)*4,
+      vy: Math.random()*3+1.5,
+      r: Math.random()*360
+    });
+  }
+  var f = 0;
+  function ani(){
+    ctx.clearRect(0,0,c.width,c.height);
+    pts.forEach(function(p){
+      p.x += p.vx; p.y += p.vy; p.r += 2;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r*Math.PI/180);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.s/2, -p.s/4, p.s, p.s/2);
+      ctx.restore();
+    });
+    f++;
+    if(f<100) requestAnimationFrame(ani);
+    else ctx.clearRect(0,0,c.width,c.height);
+  }
+  ani();
+}
+
+// ============ 初始化页面 ============
+renderHome();
+
+// ============ 词汇数据 ============
+
+</script>
+</body>
+</html>
