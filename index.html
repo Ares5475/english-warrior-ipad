@@ -158,7 +158,7 @@ body {
   <h2 style="font-size:22px;font-weight:900;color:var(--p);">&#x9009;&#x62E9;&#x4F60;&#x7684;&#x5E74;&#x7EA7;</h2>
   <p style="color:var(--m);margin-bottom:6px;font-size:14px;">&#x6210;&#x4E3A;&#x82F1;&#x8BED;&#x5C0F;&#x52C7;&#x58EB;&#xFF01;</p>
   <div class="hd">
-    <button class="hi" onclick="go('ph')">音标学习</button><button class="hi" onclick="go('wr')">&#x274E;&#x8BCD;&#x672C;</button><button class="hi" onclick="go('ch')">&#x1F4CA; 学习曲线</button><div class="hi">&#x2B50; <span id="ts">0</span> &#x661F;&#x661F;</div><div class="hi">&#x1F4DA; <span id="tw">0</span> &#x5DF2;&#x638C;&#x63E1;</div></div>
+    <button class="hi" onclick="go('wr')">📝 错词本</button><button class="hi" onclick="go('ch')">📈 学习曲线</button><div class="hi">⭐ <span id="ts">0</span> 星</div><div class="hi">📚 <span id="tw">0</span> 词</div></div>
   <div class="gg" id="gg"></div>
 </div>
 
@@ -413,19 +413,26 @@ function phonicNext(){
 
 // ============ 通用发音函数 ============
 function speak(en){
-  // 强制美式发音（比默认清晰）
-  var u = new SpeechSynthesisUtterance(en);
-  // 优先选美式语音
-  var voices = speechSynthesis.getVoices();
-  for(var i=0;i<voices.length;i++){
-    if(voices[i].lang === 'en-US' || voices[i].name.indexOf('US')!==-1){
-      u.voice = voices[i]; break;
-    }
+  try {
+    var audio = new Audio('https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(en) + '&type=2');
+    audio.playbackRate = 0.85;
+    audio.onerror = function(){
+      try {
+        var u = new SpeechSynthesisUtterance(en);
+        u.lang = 'en-US';
+        u.rate = 0.8;
+        speechSynthesis.speak(u);
+      } catch(e2) {}
+    };
+    audio.play();
+  } catch(e) {
+    try {
+      var u2 = new SpeechSynthesisUtterance(en);
+      u2.lang = 'en-US';
+      u2.rate = 0.8;
+      speechSynthesis.speak(u2);
+    } catch(e3) {}
   }
-  // 放慢语速，适合小学生
-  u.rate = 0.85;
-  u.pitch = 1.0;
-  speechSynthesis.speak(u);
 }
 
 
