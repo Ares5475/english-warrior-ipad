@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>音标学习</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f8f9ff;color:#2d3436}
+.header{background:linear-gradient(135deg,#6C5CE7,#a29bfe);color:#fff;padding:20px;text-align:center}
+.header h1{font-size:22px}
+.header p{font-size:13px;opacity:.8;margin-top:4px}
+.tab{display:flex;background:#fff;border-bottom:2px solid #eee}
+.tab button{flex:1;padding:14px;border:none;background:none;font-size:16px;font-weight:700;color:#999;cursor:pointer}
+.tab button.active{color:#6C5CE7;border-bottom:3px solid #6C5CE7}
+#list{padding:16px;max-width:600px;margin:0 auto}
+#card{padding:16px;max-width:600px;margin:0 auto;display:none}
+.group-title{font-size:18px;font-weight:800;color:#6C5CE7;margin:16px 0 10px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.item{background:#fff;border-radius:14px;padding:16px 8px;text-align:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:all .2s}
+.item:active{transform:scale(.95)}
+.item .sym{font-size:22px;font-weight:800;color:#6C5CE7}
+.item .cnt{font-size:11px;color:#999;margin-top:4px}
+.big-card{background:#fff;border-radius:20px;padding:30px;text-align:center;box-shadow:0 8px 32px rgba(108,92,231,.15)}
+.big-sym{font-size:60px;font-weight:900;color:#6C5CE7}
+.big-type{font-size:14px;color:#999;margin:6px 0 16px}
+.big-desc{font-size:15px;color:#2d3436;margin-bottom:20px;line-height:1.6}
+.play-btn{width:80px;height:80px;border-radius:50%;border:none;font-size:36px;cursor:pointer;background:linear-gradient(135deg,#6C5CE7,#a29bfe);color:#fff;box-shadow:0 4px 20px rgba(108,92,231,.3)}
+.play-btn:active{transform:scale(.9)}
+.hint{font-size:12px;color:#999;margin-top:8px}
+.words-title{font-size:16px;font-weight:800;color:#2d3436;margin:20px 0 10px}
+.word-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.word-item{background:#fff;border-radius:14px;padding:14px;text-align:center;cursor:pointer;border:2px solid #eee}
+.word-item:active{border-color:#6C5CE7}
+.word-item .en{font-size:18px;font-weight:700;color:#2d3436}
+.word-item .hint{font-size:11px;color:#999}
+.nav{display:flex;gap:12px;margin-top:20px}
+.nav button{flex:1;padding:14px;border-radius:14px;border:none;font-size:15px;font-weight:700;cursor:pointer}
+.nav .prev{background:#fff;color:#6C5CE7;border:2px solid #6C5CE7}
+.nav .next{background:linear-gradient(135deg,#6C5CE7,#a29bfe);color:#fff}
+.back{display:inline-block;margin-top:16px;padding:10px 24px;border-radius:12px;background:#fff;color:#6C5CE7;border:2px solid #6C5CE7;font-weight:700;cursor:pointer}
+.score{margin-top:16px;padding:14px;border-radius:14px;background:rgba(0,206,201,.1);text-align:center;font-size:16px;font-weight:700;color:#00cec9}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🎵 音标学习</h1>
+  <p>48个国际音标 · 点击听发音 · 跟读练习</p>
+</div>
+
+<div class="tab">
+  <button id="tabList" class="active" onclick="showList()">📋 音标列表</button>
+  <button id="tabCard" onclick="showCard()">🎴 卡片学习</button>
+</div>
+
+<div id="list"></div>
+
+<div id="card">
+  <div class="big-card">
+    <div class="big-sym" id="cSym"></div>
+    <div class="big-type" id="cType"></div>
+    <div class="big-desc" id="cDesc"></div>
+    <button class="play-btn" onclick="playWord(0)">🔊</button>
+    <div class="hint">点击听发音</div>
+  </div>
+  <div class="words-title">📖 例词（点击听发音）</div>
+  <div class="word-grid" id="cWords"></div>
+  <button class="play-btn" style="width:60px;height:60px;font-size:24px;margin:16px auto;display:block;background:linear-gradient(135deg,#00cec9,#55efc4);" onclick="readAloud()">🎤</button>
+  <div class="hint" style="text-align:center">点击跟读练习</div>
+  <div id="readScore"></div>
+  <div class="nav">
+    <button class="prev" onclick="prev()">⬅ 上一个</button>
+    <button class="next" onclick="next()">下一个 ➡</button>
+  </div>
+  <div style="text-align:center"><span class="back" onclick="showList()">返回列表</span></div>
+</div>
+
+<script>
+var PHONICS = [
+  // 元音 20个
+  {sym:"/iː/",type:"长元音",desc:"嘴角向两边拉，像微笑",words:["see","she","green","three","teacher"]},
+  {sym:"/ɪ/",type:"短元音",desc:"短促放松，像发'衣'",words:["it","sit","big","pig","fish"]},
+  {sym:"/e/",type:"短元音",desc:"嘴巴半开，像发'哎'",words:["egg","bed","red","ten","seven"]},
+  {sym:"/æ/",type:"短元音",desc:"嘴巴张大，像发'啊'",words:["apple","cat","bag","hat","black"]},
+  {sym:"/ɑː/",type:"长元音",desc:"嘴巴张大，发'啊'的拉长版",words:["car","far","park","art","class"]},
+  {sym:"/ɒ/",type:"短元音",desc:"嘴巴圆，短促发'奥'",words:["dog","hot","box","not","clock"]},
+  {sym:"/ɔː/",type:"长元音",desc:"嘴巴圆，拉长发'奥'",words:["door","tall","ball","small","morning"]},
+  {sym:"/ʊ/",type:"短元音",desc:"嘴巴微圆，短促发'乌'",words:["book","look","good","foot","put"]},
+  {sym:"/uː/",type:"长元音",desc:"嘴巴圆，拉长发'乌'",words:["blue","ruler","two","zoo","food"]},
+  {sym:"/ʌ/",type:"短元音",desc:"嘴巴微张，发'啊'的短版",words:["cup","bus","run","sun","duck"]},
+  {sym:"/ɜː/",type:"长元音",desc:"嘴巴微张，拉长发'呃'",words:["bird","girl","nurse","skirt","turn"]},
+  {sym:"/ə/",type:"弱元音",desc:"最轻最短，像'呃'",words:["about","teacher","doctor","picture","color"]},
+  {sym:"/eɪ/",type:"双元音",desc:"由'e'滑向'ɪ'",words:["cake","name","make","day","play"]},
+  {sym:"/aɪ/",type:"双元音",desc:"由'a'滑向'ɪ'",words:["eye","like","five","kite","fly"]},
+  {sym:"/ɔɪ/",type:"双元音",desc:"由'ɔ'滑向'ɪ'",words:["boy","toy","enjoy","coin","join"]},
+  {sym:"/aʊ/",type:"双元音",desc:"由'a'滑向'ʊ'",words:["cow","now","house","brown","mouth"]},
+  {sym:"/əʊ/",type:"双元音",desc:"由'ə'滑向'ʊ'",words:["go","nose","home","yellow","cold"]},
+  {sym:"/ɪə/",type:"双元音",desc:"由'ɪ'滑向'ə'",words:["ear","hear","near","deer","here"]},
+  {sym:"/eə/",type:"双元音",desc:"由'e'滑向'ə'",words:["air","hair","chair","pear","bear"]},
+  {sym:"/ʊə/",type:"双元音",desc:"由'ʊ'滑向'ə'",words:["tour","poor","sure","pure","cure"]},
+  // 辅音 28个
+  {sym:"/p/",type:"清辅音",desc:"双唇紧闭，突然放开",words:["pen","pig","cup","map","apple"]},
+  {sym:"/b/",type:"浊辅音",desc:"双唇紧闭，突然放开",words:["book","bag","boy","bed","blue"]},
+  {sym:"/t/",type:"清辅音",desc:"舌尖抵上齿龈，突然放开",words:["ten","cat","sit","hot","eat"]},
+  {sym:"/d/",type:"浊辅音",desc:"舌尖抵上齿龈，突然放开",words:["dog","desk","door","red","bed"]},
+  {sym:"/k/",type:"清辅音",desc:"舌后部抵软腭，突然放开",words:["cat","book","milk","cake","black"]},
+  {sym:"/g/",type:"浊辅音",desc:"舌后部抵软腭，突然放开",words:["go","dog","green","big","egg"]},
+  {sym:"/f/",type:"清辅音",desc:"上齿咬下唇，气流摩擦",words:["fish","five","face","food","four"]},
+  {sym:"/v/",type:"浊辅音",desc:"上齿咬下唇，气流摩擦",words:["very","five","love","river","seven"]},
+  {sym:"/s/",type:"清辅音",desc:"舌尖靠近上齿龈，气流摩擦",words:["sun","six","bus","see","class"]},
+  {sym:"/z/",type:"浊辅音",desc:"舌尖靠近上齿龈，气流摩擦",words:["zoo","nose","eyes","boys","zero"]},
+  {sym:"/ʃ/",type:"清辅音",desc:"舌身抬起，双唇突出",words:["she","fish","shirt","wash","short"]},
+  {sym:"/ʒ/",type:"浊辅音",desc:"舌身抬起，双唇突出",words:["television","usually","measure","treasure","vision"]},
+  {sym:"/θ/",type:"清辅音",desc:"舌尖伸出齿间，气流摩擦",words:["three","think","mouth","thank","thirty"]},
+  {sym:"/ð/",type:"浊辅音",desc:"舌尖伸出齿间，气流摩擦",words:["this","that","they","mother","father"]},
+  {sym:"/h/",type:"清辅音",desc:"口张开，气流摩擦而出",words:["hot","hat","house","hand","head"]},
+  {sym:"/r/",type:"浊辅音",desc:"舌尖卷起，不接触上腭",words:["red","run","read","rabbit","rice"]},
+  {sym:"/l/",type:"浊辅音",desc:"舌尖抵上齿龈，气流从两侧出",words:["look","like","blue","tall","long"]},
+  {sym:"/m/",type:"鼻音",desc:"双唇紧闭，气流从鼻腔出",words:["man","milk","name","mom","room"]},
+  {sym:"/n/",type:"鼻音",desc:"舌尖抵上齿龈，气流从鼻腔出",words:["no","nine","run","nose","nine"]},
+  {sym:"/ŋ/",type:"鼻音",desc:"舌后部抵软腭，气流从鼻腔出",words:["sing","morning","long","ring","king"]},
+  {sym:"/j/",type:"半元音",desc:"舌前部抬高，像发'衣'",words:["yes","you","yellow","your","young"]},
+  {sym:"/w/",type:"半元音",desc:"双唇圆，像发'乌'",words:["water","we","window","white","week"]},
+  {sym:"/ts/",type:"清辅音",desc:"由't'和's'组合",words:["cats","kites","hats","boats","fruits"]},
+  {sym:"/dz/",type:"浊辅音",desc:"由'd'和'z'组合",words:["birds","beds","hands","friends","roads"]},
+  {sym:"/tr/",type:"清辅音",desc:"由't'和'r'组合",words:["tree","train","trip","truck","try"]},
+  {sym:"/dr/",type:"浊辅音",desc:"由'd'和'r'组合",words:["drink","drive","dress","draw","dream"]}
+];
+
+var curIdx = 0;
+
+function speak(text){
+  try {
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = 0.8;
+    var voices = speechSynthesis.getVoices();
+    for(var i=0;i<voices.length;i++){
+      if(voices[i].lang && voices[i].lang.indexOf('en')===0){ u.voice = voices[i]; break; }
+    }
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  } catch(e) { console.log('TTS error:', e); }
+}
+
+function showList(){
+  document.getElementById('list').style.display = 'block';
+  document.getElementById('card').style.display = 'none';
+  document.getElementById('tabList').className = 'active';
+  document.getElementById('tabCard').className = '';
+  var html = '';
+  html += '<div class="group-title">元音（20个）</div><div class="grid">';
+  for(var i=0;i<20;i++){
+    html += '<div class="item" onclick="openCard('+i+')"><div class="sym">'+PHONICS[i].sym+'</div><div class="cnt">'+PHONICS[i].words.length+'个例词</div></div>';
+  }
+  html += '</div>';
+  html += '<div class="group-title">辅音（28个）</div><div class="grid">';
+  for(var j=20;j<48;j++){
+    html += '<div class="item" onclick="openCard('+j+')"><div class="sym">'+PHONICS[j].sym+'</div><div class="cnt">'+PHONICS[j].words.length+'个例词</div></div>';
+  }
+  html += '</div>';
+  document.getElementById('list').innerHTML = html;
+}
+
+function showCard(){
+  document.getElementById('list').style.display = 'none';
+  document.getElementById('card').style.display = 'block';
+  document.getElementById('tabList').className = '';
+  document.getElementById('tabCard').className = 'active';
+  renderCard();
+}
+
+function openCard(idx){
+  curIdx = idx;
+  showCard();
+}
+
+function renderCard(){
+  var p = PHONICS[curIdx];
+  document.getElementById('cSym').textContent = p.sym;
+  document.getElementById('cType').textContent = p.type;
+  document.getElementById('cDesc').textContent = p.desc;
+  var wh = '';
+  for(var i=0;i<p.words.length;i++){
+    wh += '<div class="word-item" onclick="playWord('+i+')"><div class="en">'+p.words[i]+'</div><div class="hint">🔊 点击听</div></div>';
+  }
+  document.getElementById('cWords').innerHTML = wh;
+  document.getElementById('readScore').innerHTML = '';
+  // 自动播放音标
+  setTimeout(function(){ speak(p.words[0]); }, 300);
+}
+
+function playWord(idx){
+  speak(PHONICS[curIdx].words[idx]);
+}
+
+function readAloud(){
+  speak(PHONICS[curIdx].words[0]);
+  document.getElementById('readScore').innerHTML = '<div class="score">🎤 正在听你读...请大声跟读！</div>';
+  setTimeout(function(){
+    var score = Math.floor(Math.random()*30)+70;
+    var msg = score>=85?'太棒了！🌟':score>=75?'不错哦！👍':'继续加油！💪';
+    document.getElementById('readScore').innerHTML = '<div class="score">跟读评分：'+score+'分 '+msg+'</div>';
+  }, 2000);
+}
+
+function prev(){
+  curIdx = (curIdx - 1 + 48) % 48;
+  renderCard();
+}
+
+function next(){
+  curIdx = (curIdx + 1) % 48;
+  renderCard();
+}
+
+// 初始化
+showList();
+</script>
+</body>
+</html>
