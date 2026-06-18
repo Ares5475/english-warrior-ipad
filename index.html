@@ -322,29 +322,29 @@ const PHONICS = {
 function renderPhonics(){
   var phl = document.getElementById('phl');
   phl.innerHTML = '';
-  for(var cat in PHONICS){
-    // 分类标题
+  var cats = Object.keys(PHONICS);
+  for(var ci=0; ci<cats.length; ci++){
+    var cat = cats[ci];
     var h = document.createElement('div');
     h.style = 'font-size:18px;font-weight:800;color:var(--p);margin:16px 0 10px;';
     h.textContent = cat + '（' + PHONICS[cat].length + '个）';
     phl.appendChild(h);
-    // 音标网格
     var grid = document.createElement('div');
     grid.style = 'display:grid;grid-template-columns:repeat(4,1fr);gap:10px;';
-    PHONICS[cat].forEach(function(p, idx){
-      var d = document.createElement('div');
-      d.style = 'background:var(--c);border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px solid transparent;transition:all 0.2s;';
-      d.innerHTML = '<div style="font-size:20px;font-weight:800;color:var(--p);">' + p.sym + '</div>';
-      (function(sym, desc, words, category, index){
+    for(var pi=0; pi<PHONICS[cat].length; pi++){
+      (function(p, idx, categoryName){
+        var d = document.createElement('div');
+        d.style = 'background:var(--c);border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.06);';
+        d.innerHTML = '<div style="font-size:20px;font-weight:800;color:var(--p);">' + p.sym + '</div>';
         d.onclick = function(){
-          S.phIdx = PHONICS[cat].indexOf(p);
-          S.phCat = cat;
+          S.phIdx = idx;
+          S.phCat = categoryName;
           renderPhonicCard();
           go('phc');
         };
-      })(p.sym, p.desc, p.words, cat, idx);
-      grid.appendChild(d);
-    });
+        grid.appendChild(d);
+      })(PHONICS[cat][pi], pi, cat);
+    }
     phl.appendChild(grid);
   }
 }
