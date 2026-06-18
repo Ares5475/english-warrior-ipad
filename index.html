@@ -320,32 +320,38 @@ const PHONICS = {
 
 // ============ 音标学习函数 ============
 function renderPhonics(){
-  var phl = document.getElementById('phl');
-  phl.innerHTML = '';
-  var cats = Object.keys(PHONICS);
-  for(var ci=0; ci<cats.length; ci++){
-    var cat = cats[ci];
-    var h = document.createElement('div');
-    h.style = 'font-size:18px;font-weight:800;color:var(--p);margin:16px 0 10px;';
-    h.textContent = cat + '（' + PHONICS[cat].length + '个）';
-    phl.appendChild(h);
-    var grid = document.createElement('div');
-    grid.style = 'display:grid;grid-template-columns:repeat(4,1fr);gap:10px;';
-    for(var pi=0; pi<PHONICS[cat].length; pi++){
-      (function(p, idx, categoryName){
-        var d = document.createElement('div');
-        d.style = 'background:var(--c);border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.06);';
-        d.innerHTML = '<div style="font-size:20px;font-weight:800;color:var(--p);">' + p.sym + '</div>';
-        d.onclick = function(){
-          S.phIdx = idx;
-          S.phCat = categoryName;
-          renderPhonicCard();
-          go('phc');
-        };
-        grid.appendChild(d);
-      })(PHONICS[cat][pi], pi, cat);
+  try {
+    var phl = document.getElementById('phl');
+    if(!phl){ console.error('phl元素不存在'); return; }
+    phl.innerHTML = '';
+    var cats = Object.keys(PHONICS);
+    if(cats.length === 0){ phl.innerHTML = '<div style="text-align:center;padding:40px;color:#999;">音标数据为空</div>'; return; }
+    for(var ci=0; ci<cats.length; ci++){
+      var cat = cats[ci];
+      var h = document.createElement('div');
+      h.style.cssText = 'font-size:18px;font-weight:800;color:#6C5CE7;margin:16px 0 10px;';
+      h.textContent = cat + '（' + PHONICS[cat].length + '个）';
+      phl.appendChild(h);
+      var grid = document.createElement('div');
+      grid.style.cssText = 'display:grid;grid-template-columns:repeat(4,1fr);gap:10px;';
+      for(var pi=0; pi<PHONICS[cat].length; pi++){
+        (function(p, idx, categoryName){
+          var d = document.createElement('div');
+          d.style.cssText = 'background:#fff;border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.06);';
+          d.innerHTML = '<div style="font-size:20px;font-weight:800;color:#6C5CE7;">' + p.sym + '</div>';
+          d.onclick = function(){
+            S.phIdx = idx;
+            S.phCat = categoryName;
+            renderPhonicCard();
+            go('phc');
+          };
+          grid.appendChild(d);
+        })(PHONICS[cat][pi], pi, cat);
+      }
+      phl.appendChild(grid);
     }
-    phl.appendChild(grid);
+  } catch(e) {
+    document.getElementById('phl').innerHTML = '<div style="color:red;padding:20px;">错误: ' + e.message + '</div>';
   }
 }
 
