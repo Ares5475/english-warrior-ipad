@@ -17,7 +17,7 @@ body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f8f9ff;color
 #card{padding:16px;max-width:600px;margin:0 auto;display:none}
 .group-title{font-size:18px;font-weight:800;color:#6C5CE7;margin:16px 0 10px}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.item{background:#fff;border-radius:14px;padding:16px 8px;text-align:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:all .2s}
+.item{background:#fff;border-radius:14px;padding:16px 8px;text-align:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.06)}
 .item:active{transform:scale(.95)}
 .item .sym{font-size:22px;font-weight:800;color:#6C5CE7}
 .item .cnt{font-size:11px;color:#999;margin-top:4px}
@@ -33,7 +33,6 @@ body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f8f9ff;color
 .word-item{background:#fff;border-radius:14px;padding:14px;text-align:center;cursor:pointer;border:2px solid #eee}
 .word-item:active{border-color:#6C5CE7}
 .word-item .en{font-size:18px;font-weight:700;color:#2d3436}
-.word-item .hint{font-size:11px;color:#999}
 .nav{display:flex;gap:12px;margin-top:20px}
 .nav button{flex:1;padding:14px;border-radius:14px;border:none;font-size:15px;font-weight:700;cursor:pointer}
 .nav .prev{background:#fff;color:#6C5CE7;border:2px solid #6C5CE7}
@@ -45,7 +44,7 @@ body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f8f9ff;color
 <body>
 <div class="header">
   <h1>🎵 音标学习</h1>
-  <p>48个国际音标 · 点击听发音 · 跟读练习</p>
+  <p>48个国际音标 · 真人发音 · 跟读练习</p>
 </div>
 
 <div class="tab">
@@ -61,7 +60,7 @@ body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f8f9ff;color
     <div class="big-type" id="cType"></div>
     <div class="big-desc" id="cDesc"></div>
     <button class="play-btn" onclick="playWord(0)">🔊</button>
-    <div class="hint">点击听发音</div>
+    <div class="hint">点击听真人发音</div>
   </div>
   <div class="words-title">📖 例词（点击听发音）</div>
   <div class="word-grid" id="cWords"></div>
@@ -76,8 +75,8 @@ body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f8f9ff;color
 </div>
 
 <script>
+// 48个国际音标数据
 var PHONICS = [
-  // 元音 20个
   {sym:"/iː/",type:"长元音",desc:"嘴角向两边拉，像微笑",words:["see","she","green","three","teacher"]},
   {sym:"/ɪ/",type:"短元音",desc:"短促放松，像发'衣'",words:["it","sit","big","pig","fish"]},
   {sym:"/e/",type:"短元音",desc:"嘴巴半开，像发'哎'",words:["egg","bed","red","ten","seven"]},
@@ -98,7 +97,6 @@ var PHONICS = [
   {sym:"/ɪə/",type:"双元音",desc:"由'ɪ'滑向'ə'",words:["ear","hear","near","deer","here"]},
   {sym:"/eə/",type:"双元音",desc:"由'e'滑向'ə'",words:["air","hair","chair","pear","bear"]},
   {sym:"/ʊə/",type:"双元音",desc:"由'ʊ'滑向'ə'",words:["tour","poor","sure","pure","cure"]},
-  // 辅音 28个
   {sym:"/p/",type:"清辅音",desc:"双唇紧闭，突然放开",words:["pen","pig","cup","map","apple"]},
   {sym:"/b/",type:"浊辅音",desc:"双唇紧闭，突然放开",words:["book","bag","boy","bed","blue"]},
   {sym:"/t/",type:"清辅音",desc:"舌尖抵上齿龈，突然放开",words:["ten","cat","sit","hot","eat"]},
@@ -129,18 +127,28 @@ var PHONICS = [
 
 var curIdx = 0;
 
+// 发音函数：优先用有道词典真人发音，失败用浏览器TTS
 function speak(text){
   try {
-    var u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US';
-    u.rate = 0.8;
-    var voices = speechSynthesis.getVoices();
-    for(var i=0;i<voices.length;i++){
-      if(voices[i].lang && voices[i].lang.indexOf('en')===0){ u.voice = voices[i]; break; }
-    }
-    speechSynthesis.cancel();
-    speechSynthesis.speak(u);
-  } catch(e) { console.log('TTS error:', e); }
+    var audio = new Audio('https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=2');
+    audio.playbackRate = 0.85;
+    audio.onerror = function(){
+      try {
+        var u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        u.rate = 0.8;
+        speechSynthesis.speak(u);
+      } catch(e2) {}
+    };
+    audio.play();
+  } catch(e) {
+    try {
+      var u2 = new SpeechSynthesisUtterance(text);
+      u2.lang = 'en-US';
+      u2.rate = 0.8;
+      speechSynthesis.speak(u2);
+    } catch(e3) {}
+  }
 }
 
 function showList(){
@@ -154,8 +162,8 @@ function showList(){
     html += '<div class="item" onclick="openCard('+i+')"><div class="sym">'+PHONICS[i].sym+'</div><div class="cnt">'+PHONICS[i].words.length+'个例词</div></div>';
   }
   html += '</div>';
-  html += '<div class="group-title">辅音（28个）</div><div class="grid">';
-  for(var j=20;j<48;j++){
+  html += '<div class="group-title">辅音（26个）</div><div class="grid">';
+  for(var j=20;j<46;j++){
     html += '<div class="item" onclick="openCard('+j+')"><div class="sym">'+PHONICS[j].sym+'</div><div class="cnt">'+PHONICS[j].words.length+'个例词</div></div>';
   }
   html += '</div>';
@@ -186,8 +194,6 @@ function renderCard(){
   }
   document.getElementById('cWords').innerHTML = wh;
   document.getElementById('readScore').innerHTML = '';
-  // 自动播放音标
-  setTimeout(function(){ speak(p.words[0]); }, 300);
 }
 
 function playWord(idx){
@@ -205,17 +211,19 @@ function readAloud(){
 }
 
 function prev(){
-  curIdx = (curIdx - 1 + 48) % 48;
+  curIdx = (curIdx - 1 + PHONICS.length) % PHONICS.length;
   renderCard();
 }
 
 function next(){
-  curIdx = (curIdx + 1) % 48;
+  curIdx = (curIdx + 1) % PHONICS.length;
   renderCard();
 }
 
-// 初始化
-showList();
+// 页面加载完成后初始化
+window.onload = function(){
+  showList();
+};
 </script>
 </body>
 </html>
