@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Chart.js 异步加载，失败不阻断主功能
+(function(){
+  var s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+  s.onerror = function(){ window._chartError = true; };
+  document.head.appendChild(s);
+})();
+</script>
 <title>英语小勇士</title>
 <style>
 :root {
@@ -5163,6 +5171,12 @@ function renderWrong(){
 }
 
 function renderChart(){
+  // 检查 Chart.js 是否加载成功
+  if(typeof Chart === 'undefined'){
+    var ph = document.getElementById('chartCanvas');
+    if(ph) ph.parentNode.innerHTML = '<div style="text-align:center;color:#999;padding:40px;">📊 学习曲线图需要联网加载，当前为离线模式。<br>请在线访问：ares5475.github.io/english-warrior-ipad</div>';
+    return;
+  }
   var ctx = document.getElementById('chartCanvas').getContext('2d');
   // 从 localStorage 读取每日星星数
   var daily = JSON.parse(localStorage.getItem('daily') || '{}');
