@@ -253,18 +253,19 @@ body {
 
 <script>
 function speak(en){
-  // 优先用国内可访问的有道词典发音API
-  var audio = new Audio('https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(en) + '&type=1');
-  audio.playbackRate = 0.9; // 稍微放慢，适合小学生跟读
-  var played = false;
-  audio.onerror = function(){
-    if(!played){
-      played = true;
-      // 失败时用浏览器自带TTS
-      speechSynthesis.speak(new SpeechSynthesisUtterance(en));
+  // 强制美式发音（比默认清晰）
+  var u = new SpeechSynthesisUtterance(en);
+  // 优先选美式语音
+  var voices = speechSynthesis.getVoices();
+  for(var i=0;i<voices.length;i++){
+    if(voices[i].lang === 'en-US' || voices[i].name.indexOf('US')!==-1){
+      u.voice = voices[i]; break;
     }
-  };
-  audio.play();
+  }
+  // 放慢语速，适合小学生
+  u.rate = 0.85;
+  u.pitch = 1.0;
+  speechSynthesis.speak(u);
 }
 
 
