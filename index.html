@@ -3,15 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script>
-// Chart.js 异步加载，失败不阻断主功能
-(function(){
-  var s = document.createElement('script');
-  s.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-  s.onerror = function(){ window._chartError = true; };
-  document.head.appendChild(s);
-})();
-</script>
 <title>英语小勇士</title>
 <style>
 :root {
@@ -253,9 +244,7 @@ body {
 <!-- chart -->
 <div class="pg" id="ch" style="padding:20px;min-height:100vh;">
   <div class="bar"><button class="bk" onclick="go('h')">&#x2190;</button><div style="font-size:17px;font-weight:800;color:var(--p);">&#x1F4CA; 学习曲线</div><div></div>
-  <div style="width:100%;max-width:500px;margin-top:20px;">
-    <canvas id="chartCanvas"></canvas>
-  </div>
+  <div style="width:100%;max-width:500px;margin-top:20px;" id="chartCanvas"></div>
   <button class="mb" style="margin-top:20px;" onclick="go('h')">&#x1F3E0; &#x8FD4;&#x56DE;&#x9996;</button>
 </div>
 
@@ -5171,43 +5160,47 @@ function renderWrong(){
 }
 
 function renderChart(){
-  // 检查 Chart.js 是否加载成功
-  if(typeof Chart === 'undefined'){
-    var ph = document.getElementById('chartCanvas');
-    if(ph) ph.parentNode.innerHTML = '<div style="text-align:center;color:#999;padding:40px;">📊 学习曲线图需要联网加载，当前为离线模式。<br>请在线访问：ares5475.github.io/english-warrior-ipad</div>';
-    return;
-  }
-  var ctx = document.getElementById('chartCanvas').getContext('2d');
-  // 从 localStorage 读取每日星星数
   var daily = JSON.parse(localStorage.getItem('daily') || '{}');
   var labels = Object.keys(daily).slice(-7);
   var values = labels.map(function(d){ return daily[d] || 0; });
-  
-  // 如果没数据，显示提示
+  var container = document.getElementById('chartCanvas').parentNode;
   if(labels.length === 0){
-    document.getElementById('chartCanvas').style.display = 'none';
-    ctx.canvas.parentNode.innerHTML += '<div style="text-align:center;color:var(--m);padding:40px;">还没有学习数据哦～开始学习吧！</div>';
+    container.innerHTML = '<div style="text-align:center;color:#999;padding:40px;">还没有学习数据哦～开始学习吧！</div>';
     return;
   }
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: '每日星星数',
-        data: values,
-        borderColor: '#6C5CE7',
-        backgroundColor: 'rgba(108,92,231,0.1)',
-        fill: true,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } }
-    }
-  });
+  // 纯Canvas手绘折线图
+  var W = 460, H = 280, pad = 40;
+  var maxV = Math.max.apply(null, values);
+  if(maxV === 0) maxV = 1;
+  var stepX = (W - pad * 2) / (values.length - 1 || 1);
+  var stepY = (H - pad * 2) / maxV;
+  var pts = [];
+  for(var i = 0; i < values.length; i++){
+    pts.push({ x: pad + i * stepX, y: H - pad - values[i] * stepY, label: labels[i].slice(5), val: values[i] });
+  }
+  var svg = '<svg width="' + W + '" height="' + H + '" style="max-width:100%;">';
+  // 网格线
+  svg += '<line x1="' + pad + '" y1="' + pad + '" x2="' + pad + '" y2="' + (H-pad) + '" stroke="#ddd" stroke-width="1"/>';
+  svg += '<line x1="' + pad + '" y1="' + (H-pad) + '" x2="' + (W-pad) + '" y2="' + (H-pad) + '" stroke="#ddd" stroke-width="1"/>';
+  // 折线和填充
+  var pathD = 'M ' + pts[0].x + ' ' + pts[0].y;
+  var fillD = 'M ' + pts[0].x + ' ' + (H-pad) + ' L ' + pts[0].x + ' ' + pts[0].y;
+  for(var j = 1; j < pts.length; j++){
+    pathD += ' L ' + pts[j].x + ' ' + pts[j].y;
+    fillD += ' L ' + pts[j].x + ' ' + pts[j].y;
+  }
+  fillD += ' L ' + pts[pts.length-1].x + ' ' + (H-pad) + ' Z';
+  svg += '<path d="' + fillD + '" fill="rgba(108,92,231,0.1)"/>';
+  svg += '<path d="' + pathD + '" fill="none" stroke="#6C5CE7" stroke-width="2.5" stroke-linejoin="round"/>';
+  // 数据点和标签
+  for(var k = 0; k < pts.length; k++){
+    svg += '<circle cx="' + pts[k].x + '" cy="' + pts[k].y + '" r="4" fill="#6C5CE7"/>';
+    svg += '<text x="' + pts[k].x + '" y="' + (H-pad+16) + '" text-anchor="middle" font-size="11" fill="#999">' + pts[k].label + '</text>';
+    svg += '<text x="' + pts[k].x + '" y="' + (pts[k].y-10) + '" text-anchor="middle" font-size="12" fill="#6C5CE7" font-weight="bold">' + pts[k].val + '</text>';
+  }
+  svg += '<text x="' + (W/2) + '" y="20" text-anchor="middle" font-size="14" fill="#6C5CE7" font-weight="bold">最近7天学习星星数</text>';
+  svg += '</svg>';
+  container.innerHTML = svg;
 }
 
 function go(pid){
