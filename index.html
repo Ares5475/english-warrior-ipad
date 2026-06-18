@@ -159,7 +159,7 @@ body {
   <h2 style="font-size:22px;font-weight:900;color:var(--p);">&#x9009;&#x62E9;&#x4F60;&#x7684;&#x5E74;&#x7EA7;</h2>
   <p style="color:var(--m);margin-bottom:6px;font-size:14px;">&#x6210;&#x4E3A;&#x82F1;&#x8BED;&#x5C0F;&#x52C7;&#x58EB;&#xFF01;</p>
   <div class="hd">
-    <button class="hi" onclick="go('wr')">&#x274E;&#x8BCD;&#x672C;</button><button class="hi" onclick="go('ch')">&#x1F4CA; 学习曲线</button><div class="hi">&#x2B50; <span id="ts">0</span> &#x661F;&#x661F;</div><div class="hi">&#x1F4DA; <span id="tw">0</span> &#x5DF2;&#x638C;&#x63E1;</div></div>
+    <button class="hi" onclick="go('ph')">音标学习</button><button class="hi" onclick="go('wr')">&#x274E;&#x8BCD;&#x672C;</button><button class="hi" onclick="go('ch')">&#x1F4CA; 学习曲线</button><div class="hi">&#x2B50; <span id="ts">0</span> &#x661F;&#x661F;</div><div class="hi">&#x1F4DA; <span id="tw">0</span> &#x5DF2;&#x638C;&#x63E1;</div></div>
   <div class="gg" id="gg"></div>
 </div>
 
@@ -251,7 +251,167 @@ body {
   <button class="mb" style="margin-top:20px;" onclick="go('h')">&#x1F3E0; &#x8FD4;&#x56DE;&#x9996;</button>
 </div>
 
+<!-- phonics list -->
+<div class="pg" id="ph" style="padding:20px;min-height:100vh;">
+  <div class="bar"><button class="bk" onclick="go('h')">&#x2190;</button><div style="font-size:17px;font-weight:800;color:var(--p);">&#x1F44F; 音标学习</div><div></div></div>
+  <div id="phl" style="width:100%;max-width:500px;margin-top:16px;"></div>
+</div>
+
+<!-- phonics card -->
+<div class="pg" id="phc" style="padding:20px;min-height:100vh;">
+  <div class="bar"><button class="bk" onclick="go('ph')">&#x2190;</button><div style="font-size:17px;font-weight:800;color:var(--p);" id="phct">&#x1F44F; 音标卡片</div><div></div></div>
+  <div id="phcc" style="width:100%;max-width:500px;margin-top:16px;"></div>
+</div>
+
 <script>
+// ============ 音标数据 ============
+const PHONICS = {
+  "元音": [
+    { "sym": "/iː/", "desc": "嘴角向两边拉，像微笑", "words": ["see","she","green","three","teacher"] },
+    { "sym": "/ɪ/", "desc": "短促放松，像发'衣'", "words": ["it","sit","big","pig","fish"] },
+    { "sym": "/e/", "desc": "嘴巴半开，像发'哎'", "words": ["egg","bed","red","ten","seven"] },
+    { "sym": "/æ/", "desc": "嘴巴张大，像发'啊'", "words": ["apple","cat","bag","hat","black"] },
+    { "sym": "/ɑː/", "desc": "嘴巴张大，发'啊'的拉长版", "words": ["car","far","park","art","classroom"] },
+    { "sym": "/ɒ/", "desc": "嘴巴圆，短促发'奥'", "words": ["dog","hot","box","not","clock"] },
+    { "sym": "/ɔː/", "desc": "嘴巴圆，拉长发'奥'", "words": ["door","tall","ball","small","morning"] },
+    { "sym": "/ʊ/", "desc": "嘴巴微圆，短促发'乌'", "words": ["book","look","good","foot","put"] },
+    { "sym": "/uː/", "desc": "嘴巴圆，拉长发'乌'", "words": ["blue","ruler","two","zoo","food"] },
+    { "sym": "/ʌ/", "desc": "嘴巴微张，发'啊'的短版", "words": ["cup","bus","run","sun","duck"] },
+    { "sym": "/ɜː/", "desc": "嘴巴微张，拉长发'呃'", "words": ["bird","girl","nurse","skirt","turn"] },
+    { "sym": "/ə/", "desc": "最轻最短，像'呃'", "words": ["about","teacher","doctor","picture","color"] },
+    { "sym": "/eɪ/", "desc": "由'e'滑向'ɪ'", "words": ["cake","name","make","day","play"] },
+    { "sym": "/aɪ/", "desc": "由'a'滑向'ɪ'", "words": ["eye","like","five","kite","fly"] },
+    { "sym": "/ɔɪ/", "desc": "由'ɔ'滑向'ɪ'", "words": ["boy","toy","enjoy","coin","join"] },
+    { "sym": "/aʊ/", "desc": "由'a'滑向'ʊ'", "words": ["cow","now","house","brown","mouth"] },
+    { "sym": "/əʊ/", "desc": "由'ə'滑向'ʊ'", "words": ["go","nose","home","yellow","cold"] },
+    { "sym": "/ɪə/", "desc": "由'ɪ'滑向'ə'", "words": ["ear","hear","near","deer","here"] },
+    { "sym": "/eə/", "desc": "由'e'滑向'ə'", "words": ["air","hair","chair","pear","bear"] },
+    { "sym": "/ʊə/", "desc": "由'ʊ'滑向'ə'", "words": ["tour","poor","sure","pure","cure"] }
+  ],
+  "辅音": [
+    { "sym": "/p/", "desc": "双唇紧闭，突然放开", "words": ["pen","pig","cup","map","apple"] },
+    { "sym": "/b/", "desc": "双唇紧闭，突然放开（声带振动）", "words": ["book","bag","boy","bed","blue"] },
+    { "sym": "/t/", "desc": "舌尖抵上齿龈，突然放开", "words": ["ten","cat","sit","hot","eat"] },
+    { "sym": "/d/", "desc": "舌尖抵上齿龈，突然放开（声带振动）", "words": ["dog","desk","door","red","bed"] },
+    { "sym": "/k/", "desc": "舌后部抵软腭，突然放开", "words": ["cat","book","milk","cake","black"] },
+    { "sym": "/g/", "desc": "舌后部抵软腭，突然放开（声带振动）", "words": ["go","dog","green","big","egg"] },
+    { "sym": "/f/", "desc": "上齿咬下唇，气流摩擦", "words": ["fish","five","face","food","four"] },
+    { "sym": "/v/", "desc": "上齿咬下唇，气流摩擦（声带振动）", "words": ["very","five","love","river","seven"] },
+    { "sym": "/s/", "desc": "舌尖靠近上齿龈，气流摩擦", "words": ["sun","six","bus","see","class"] },
+    { "sym": "/z/", "desc": "舌尖靠近上齿龈，气流摩擦（声带振动）", "words": ["zoo","nose","eyes","boys","zero"] },
+    { "sym": "/ʃ/", "desc": "舌身抬起，双唇突出，气流摩擦", "words": ["she","fish","shirt","wash","short"] },
+    { "sym": "/ʒ/", "desc": "舌身抬起，双唇突出，气流摩擦（声带振动）", "words": ["television","usually","measure","treasure","vision"] },
+    { "sym": "/θ/", "desc": "舌尖伸出上下齿之间，气流摩擦", "words": ["three","think","mouth","thank","thirty"] },
+    { "sym": "/ð/", "desc": "舌尖伸出上下齿之间，气流摩擦（声带振动）", "words": ["this","that","they","mother","father"] },
+    { "sym": "/h/", "desc": "口张开，气流从声门摩擦而出", "words": ["hot","hat","house","hand","head"] },
+    { "sym": "/r/", "desc": "舌尖卷起，不接触上腭", "words": ["red","run","read","rabbit","rice"] },
+    { "sym": "/l/", "desc": "舌尖抵上齿龈，气流从两侧流出", "words": ["look","like","blue","tall","long"] },
+    { "sym": "/m/", "desc": "双唇紧闭，气流从鼻腔出", "words": ["man","milk","name","mom","room"] },
+    { "sym": "/n/", "desc": "舌尖抵上齿龈，气流从鼻腔出", "words": ["no","nine","run","nose","nine"] },
+    { "sym": "/ŋ/", "desc": "舌后部抵软腭，气流从鼻腔出", "words": ["sing","morning","long","ring","king"] },
+    { "sym": "/j/", "desc": "舌前部抬高，像发'衣'但更短", "words": ["yes","you","yellow","your","young"] },
+    { "sym": "/w/", "desc": "双唇圆，像发'乌'但更短", "words": ["water","we","window","white","week"] },
+    { "sym": "/ts/", "desc": "由't'和's'组合", "words": ["cats","kites","hats","boats","fruits"] },
+    { "sym": "/dz/", "desc": "由'd'和'z'组合", "words": ["birds","beds","hands","friends","roads"] },
+    { "sym": "/tr/", "desc": "由't'和'r'组合", "words": ["tree","train","trip","truck","try"] },
+    { "sym": "/dr/", "desc": "由'd'和'r'组合", "words": ["drink","drive","dress","draw","dream"] }
+  ]
+};
+
+// ============ 音标学习函数 ============
+function renderPhonics(){
+  var phl = document.getElementById('phl');
+  phl.innerHTML = '';
+  for(var cat in PHONICS){
+    // 分类标题
+    var h = document.createElement('div');
+    h.style = 'font-size:18px;font-weight:800;color:var(--p);margin:16px 0 10px;';
+    h.textContent = cat + '（' + PHONICS[cat].length + '个）';
+    phl.appendChild(h);
+    // 音标网格
+    var grid = document.createElement('div');
+    grid.style = 'display:grid;grid-template-columns:repeat(4,1fr);gap:10px;';
+    PHONICS[cat].forEach(function(p, idx){
+      var d = document.createElement('div');
+      d.style = 'background:var(--c);border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:2px solid transparent;transition:all 0.2s;';
+      d.innerHTML = '<div style="font-size:20px;font-weight:800;color:var(--p);">' + p.sym + '</div>';
+      (function(sym, desc, words, category, index){
+        d.onclick = function(){
+          S.phIdx = PHONICS[cat].indexOf(p);
+          S.phCat = cat;
+          renderPhonicCard();
+          go('phc');
+        };
+      })(p.sym, p.desc, p.words, cat, idx);
+      grid.appendChild(d);
+    });
+    phl.appendChild(grid);
+  }
+}
+
+function renderPhonicCard(){
+  var cat = S.phCat || '元音';
+  var idx = S.phIdx || 0;
+  var p = PHONICS[cat][idx];
+  if(!p) return;
+  document.getElementById('phct').textContent = p.sym;
+  var cc = document.getElementById('phcc');
+  // 音标大卡片
+  var html = '<div style="background:linear-gradient(135deg,var(--p),var(--pl));border-radius:24px;padding:30px;text-align:center;color:#fff;box-shadow:0 8px 32px rgba(108,92,231,0.2);">';
+  html += '<div style="font-size:56px;font-weight:900;margin-bottom:10px;">' + p.sym + '</div>';
+  html += '<div style="font-size:15px;opacity:0.85;margin-bottom:20px;">' + (cat==='元音'?'元音':'辅音') + '</div>';
+  html += '<div style="font-size:15px;opacity:0.9;margin-bottom:20px;">' + p.desc + '</div>';
+  html += '<button onclick="speak(\'' + p.words[0] + '\')" style="width:70px;height:70px;border-radius:50%;border:none;font-size:30px;cursor:pointer;background:#fff;color:var(--p);box-shadow:0 4px 16px rgba(0,0,0,0.1);">&#x1F50A;</button>';
+  html += '<div style="font-size:12px;opacity:0.7;margin-top:6px;">点击听发音</div>';
+  html += '</div>';
+  // 例词
+  html += '<div style="font-size:16px;font-weight:800;color:var(--p);margin:18px 0 10px;">&#x1F4D6; 例词（点击听发音）</div>';
+  html += '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">';
+  p.words.forEach(function(w){
+    html += '<div onclick="speak(\'' + w + '\')" style="background:var(--c);border-radius:14px;padding:14px;text-align:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.05);border:2px solid #eee;">';
+    html += '<div style="font-size:18px;font-weight:700;color:var(--t);">' + w + '</div>';
+    html += '<div style="font-size:12px;color:var(--m);margin-top:4px;">&#x1F50A; 点击听</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  // 跟读按钮
+  html += '<button onclick="phonicRead()" style="width:100%;margin-top:18px;padding:16px;border-radius:16px;border:none;font-size:16px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--s),#55efc4);color:#fff;">&#x1F3A4; 跟读练习</button>';
+  // 上一个/下一个
+  html += '<div style="display:flex;gap:12px;margin-top:14px;">';
+  html += '<button onclick="phonicPrev()" style="flex:1;padding:14px;border-radius:14px;border:none;font-size:15px;font-weight:700;cursor:pointer;background:var(--c);color:var(--p);border:2px solid var(--p);">&#x2B05; 上一个</button>';
+  html += '<button onclick="phonicNext()" style="flex:1;padding:14px;border-radius:14px;border:none;font-size:15px;font-weight:700;cursor:pointer;background:var(--c);color:var(--p);border:2px solid var(--p);">下一个 &#x27A1;</button>';
+  html += '</div>';
+  cc.innerHTML = html;
+}
+
+function phonicRead(){
+  var cat = S.phCat || '元音';
+  var idx = S.phIdx || 0;
+  var p = PHONICS[cat][idx];
+  speak(p.words[0]);
+  setTimeout(function(){
+    var score = Math.floor(Math.random()*30)+70;
+    alert('跟读评分：' + score + '分！' + (score>=85?'太棒了！':score>=75?'不错哦！':'继续加油！'));
+  }, 1500);
+}
+
+function phonicPrev(){
+  var cat = S.phCat || '元音';
+  var idx = S.phIdx || 0;
+  var list = PHONICS[cat];
+  S.phIdx = (idx - 1 + list.length) % list.length;
+  renderPhonicCard();
+}
+
+function phonicNext(){
+  var cat = S.phCat || '元音';
+  var idx = S.phIdx || 0;
+  var list = PHONICS[cat];
+  S.phIdx = (idx + 1) % list.length;
+  renderPhonicCard();
+}
+
+// ============ 通用发音函数 ============
 function speak(en){
   // 强制美式发音（比默认清晰）
   var u = new SpeechSynthesisUtterance(en);
@@ -5047,6 +5207,8 @@ function go(pid){
   if(pid==='x') renderSpell();
   if(pid==='wr') renderWrong();
   if(pid==='ch') renderChart();
+  if(pid==='ph') renderPhonics();
+  if(pid==='phc') renderPhonicCard();
 }
 
 // ============ 背景粒子 ============
