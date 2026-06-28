@@ -44,7 +44,7 @@ body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f8f9ff;color
 <body>
 <div class="header">
   <h1>🎵 音标学习</h1>
-  <p>48个国际音标 · 真人发音 · 跟读练习</p>
+  <p>48个国际音标 · 点击听音标发音 · 跟读练习</p>
 </div>
 
 <div class="tab">
@@ -59,10 +59,10 @@ body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f8f9ff;color
     <div class="big-sym" id="cSym"></div>
     <div class="big-type" id="cType"></div>
     <div class="big-desc" id="cDesc"></div>
-    <button class="play-btn" onclick="playWord(0)">🔊</button>
-    <div class="hint">点击听真人发音</div>
+    <button class="play-btn" onclick="playSound()">🔊</button>
+    <div class="hint">点击听音标发音</div>
   </div>
-  <div class="words-title">📖 例词（点击听发音）</div>
+  <div class="words-title">📖 例词（点击听单词发音）</div>
   <div class="word-grid" id="cWords"></div>
   <button class="play-btn" style="width:60px;height:60px;font-size:24px;margin:16px auto;display:block;background:linear-gradient(135deg,#00cec9,#55efc4);" onclick="readAloud()">🎤</button>
   <div class="hint" style="text-align:center">点击跟读练习</div>
@@ -76,59 +76,90 @@ body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f8f9ff;color
 
 <script>
 // 48个国际音标数据
+// voice字段：用于发音的拟音拼写（不是单词，是音标本身的近似发音）
 var PHONICS = [
-  {sym:"/iː/",type:"长元音",desc:"嘴角向两边拉，像微笑",words:["see","she","green","three","teacher"]},
-  {sym:"/ɪ/",type:"短元音",desc:"短促放松，像发'衣'",words:["it","sit","big","pig","fish"]},
-  {sym:"/e/",type:"短元音",desc:"嘴巴半开，像发'哎'",words:["egg","bed","red","ten","seven"]},
-  {sym:"/æ/",type:"短元音",desc:"嘴巴张大，像发'啊'",words:["apple","cat","bag","hat","black"]},
-  {sym:"/ɑː/",type:"长元音",desc:"嘴巴张大，发'啊'的拉长版",words:["car","far","park","art","class"]},
-  {sym:"/ɒ/",type:"短元音",desc:"嘴巴圆，短促发'奥'",words:["dog","hot","box","not","clock"]},
-  {sym:"/ɔː/",type:"长元音",desc:"嘴巴圆，拉长发'奥'",words:["door","tall","ball","small","morning"]},
-  {sym:"/ʊ/",type:"短元音",desc:"嘴巴微圆，短促发'乌'",words:["book","look","good","foot","put"]},
-  {sym:"/uː/",type:"长元音",desc:"嘴巴圆，拉长发'乌'",words:["blue","ruler","two","zoo","food"]},
-  {sym:"/ʌ/",type:"短元音",desc:"嘴巴微张，发'啊'的短版",words:["cup","bus","run","sun","duck"]},
-  {sym:"/ɜː/",type:"长元音",desc:"嘴巴微张，拉长发'呃'",words:["bird","girl","nurse","skirt","turn"]},
-  {sym:"/ə/",type:"弱元音",desc:"最轻最短，像'呃'",words:["about","teacher","doctor","picture","color"]},
-  {sym:"/eɪ/",type:"双元音",desc:"由'e'滑向'ɪ'",words:["cake","name","make","day","play"]},
-  {sym:"/aɪ/",type:"双元音",desc:"由'a'滑向'ɪ'",words:["eye","like","five","kite","fly"]},
-  {sym:"/ɔɪ/",type:"双元音",desc:"由'ɔ'滑向'ɪ'",words:["boy","toy","enjoy","coin","join"]},
-  {sym:"/aʊ/",type:"双元音",desc:"由'a'滑向'ʊ'",words:["cow","now","house","brown","mouth"]},
-  {sym:"/əʊ/",type:"双元音",desc:"由'ə'滑向'ʊ'",words:["go","nose","home","yellow","cold"]},
-  {sym:"/ɪə/",type:"双元音",desc:"由'ɪ'滑向'ə'",words:["ear","hear","near","deer","here"]},
-  {sym:"/eə/",type:"双元音",desc:"由'e'滑向'ə'",words:["air","hair","chair","pear","bear"]},
-  {sym:"/ʊə/",type:"双元音",desc:"由'ʊ'滑向'ə'",words:["tour","poor","sure","pure","cure"]},
-  {sym:"/p/",type:"清辅音",desc:"双唇紧闭，突然放开",words:["pen","pig","cup","map","apple"]},
-  {sym:"/b/",type:"浊辅音",desc:"双唇紧闭，突然放开",words:["book","bag","boy","bed","blue"]},
-  {sym:"/t/",type:"清辅音",desc:"舌尖抵上齿龈，突然放开",words:["ten","cat","sit","hot","eat"]},
-  {sym:"/d/",type:"浊辅音",desc:"舌尖抵上齿龈，突然放开",words:["dog","desk","door","red","bed"]},
-  {sym:"/k/",type:"清辅音",desc:"舌后部抵软腭，突然放开",words:["cat","book","milk","cake","black"]},
-  {sym:"/g/",type:"浊辅音",desc:"舌后部抵软腭，突然放开",words:["go","dog","green","big","egg"]},
-  {sym:"/f/",type:"清辅音",desc:"上齿咬下唇，气流摩擦",words:["fish","five","face","food","four"]},
-  {sym:"/v/",type:"浊辅音",desc:"上齿咬下唇，气流摩擦",words:["very","five","love","river","seven"]},
-  {sym:"/s/",type:"清辅音",desc:"舌尖靠近上齿龈，气流摩擦",words:["sun","six","bus","see","class"]},
-  {sym:"/z/",type:"浊辅音",desc:"舌尖靠近上齿龈，气流摩擦",words:["zoo","nose","eyes","boys","zero"]},
-  {sym:"/ʃ/",type:"清辅音",desc:"舌身抬起，双唇突出",words:["she","fish","shirt","wash","short"]},
-  {sym:"/ʒ/",type:"浊辅音",desc:"舌身抬起，双唇突出",words:["television","usually","measure","treasure","vision"]},
-  {sym:"/θ/",type:"清辅音",desc:"舌尖伸出齿间，气流摩擦",words:["three","think","mouth","thank","thirty"]},
-  {sym:"/ð/",type:"浊辅音",desc:"舌尖伸出齿间，气流摩擦",words:["this","that","they","mother","father"]},
-  {sym:"/h/",type:"清辅音",desc:"口张开，气流摩擦而出",words:["hot","hat","house","hand","head"]},
-  {sym:"/r/",type:"浊辅音",desc:"舌尖卷起，不接触上腭",words:["red","run","read","rabbit","rice"]},
-  {sym:"/l/",type:"浊辅音",desc:"舌尖抵上齿龈，气流从两侧出",words:["look","like","blue","tall","long"]},
-  {sym:"/m/",type:"鼻音",desc:"双唇紧闭，气流从鼻腔出",words:["man","milk","name","mom","room"]},
-  {sym:"/n/",type:"鼻音",desc:"舌尖抵上齿龈，气流从鼻腔出",words:["no","nine","run","nose","nine"]},
-  {sym:"/ŋ/",type:"鼻音",desc:"舌后部抵软腭，气流从鼻腔出",words:["sing","morning","long","ring","king"]},
-  {sym:"/j/",type:"半元音",desc:"舌前部抬高，像发'衣'",words:["yes","you","yellow","your","young"]},
-  {sym:"/w/",type:"半元音",desc:"双唇圆，像发'乌'",words:["water","we","window","white","week"]},
-  {sym:"/ts/",type:"清辅音",desc:"由't'和's'组合",words:["cats","kites","hats","boats","fruits"]},
-  {sym:"/dz/",type:"浊辅音",desc:"由'd'和'z'组合",words:["birds","beds","hands","friends","roads"]},
-  {sym:"/tr/",type:"清辅音",desc:"由't'和'r'组合",words:["tree","train","trip","truck","try"]},
-  {sym:"/dr/",type:"浊辅音",desc:"由'd'和'r'组合",words:["drink","drive","dress","draw","dream"]}
+  // 元音 20个
+  {sym:"/iː/",type:"长元音",desc:"嘴角向两边拉，像微笑，发长音'衣'",voice:"ee",words:["see","she","green","three","teacher"]},
+  {sym:"/ɪ/",type:"短元音",desc:"短促放松，像发短音'衣'",voice:"ih",words:["it","sit","big","pig","fish"]},
+  {sym:"/e/",type:"短元音",desc:"嘴巴半开，像发'哎'",voice:"eh",words:["egg","bed","red","ten","seven"]},
+  {sym:"/æ/",type:"短元音",desc:"嘴巴张大，介于'啊'和'哎'之间",voice:"aah",words:["apple","cat","bag","hat","black"]},
+  {sym:"/ɑː/",type:"长元音",desc:"嘴巴张大，发长音'啊'",voice:"ah",words:["car","far","park","art","class"]},
+  {sym:"/ɒ/",type:"短元音",desc:"嘴巴圆，短促发'奥'",voice:"oh",words:["dog","hot","box","not","clock"]},
+  {sym:"/ɔː/",type:"长元音",desc:"嘴巴圆，拉长发'奥'",voice:"aw",words:["door","tall","ball","small","morning"]},
+  {sym:"/ʊ/",type:"短元音",desc:"嘴巴微圆，短促发'乌'",voice:"uh",words:["book","look","good","foot","put"]},
+  {sym:"/uː/",type:"长元音",desc:"嘴巴圆，拉长发'乌'",voice:"oo",words:["blue","ruler","two","zoo","food"]},
+  {sym:"/ʌ/",type:"短元音",desc:"嘴巴微张，短促发'啊'",voice:"uh",words:["cup","bus","run","sun","duck"]},
+  {sym:"/ɜː/",type:"长元音",desc:"嘴巴微张，拉长发'呃'",voice:"err",words:["bird","girl","nurse","skirt","turn"]},
+  {sym:"/ə/",type:"弱元音",desc:"最轻最短，像轻声'呃'",voice:"uh",words:["about","teacher","doctor","picture","color"]},
+  {sym:"/eɪ/",type:"双元音",desc:"由'e'滑向'ɪ'",voice:"ay",words:["cake","name","make","day","play"]},
+  {sym:"/aɪ/",type:"双元音",desc:"由'a'滑向'ɪ'",voice:"eye",words:["eye","like","five","kite","fly"]},
+  {sym:"/ɔɪ/",type:"双元音",desc:"由'ɔ'滑向'ɪ'",voice:"oy",words:["boy","toy","enjoy","coin","join"]},
+  {sym:"/aʊ/",type:"双元音",desc:"由'a'滑向'ʊ'",voice:"ow",words:["cow","now","house","brown","mouth"]},
+  {sym:"/əʊ/",type:"双元音",desc:"由'ə'滑向'ʊ'",voice:"oh",words:["go","nose","home","yellow","cold"]},
+  {sym:"/ɪə/",type:"双元音",desc:"由'ɪ'滑向'ə'",voice:"ear",words:["ear","hear","near","deer","here"]},
+  {sym:"/eə/",type:"双元音",desc:"由'e'滑向'ə'",voice:"air",words:["air","hair","chair","pear","bear"]},
+  {sym:"/ʊə/",type:"双元音",desc:"由'ʊ'滑向'ə'",voice:"oor",words:["tour","poor","sure","pure","cure"]},
+  // 辅音 26个
+  {sym:"/p/",type:"清辅音",desc:"双唇紧闭，突然放开，送气",voice:"p",words:["pen","pig","cup","map","apple"]},
+  {sym:"/b/",type:"浊辅音",desc:"双唇紧闭，突然放开，声带振动",voice:"b",words:["book","bag","boy","bed","blue"]},
+  {sym:"/t/",type:"清辅音",desc:"舌尖抵上齿龈，突然放开，送气",voice:"t",words:["ten","cat","sit","hot","eat"]},
+  {sym:"/d/",type:"浊辅音",desc:"舌尖抵上齿龈，突然放开，声带振动",voice:"d",words:["dog","desk","door","red","bed"]},
+  {sym:"/k/",type:"清辅音",desc:"舌后部抵软腭，突然放开，送气",voice:"k",words:["cat","book","milk","cake","black"]},
+  {sym:"/g/",type:"浊辅音",desc:"舌后部抵软腭，突然放开，声带振动",voice:"g",words:["go","dog","green","big","egg"]},
+  {sym:"/f/",type:"清辅音",desc:"上齿咬下唇，气流摩擦而出",voice:"f",words:["fish","five","face","food","four"]},
+  {sym:"/v/",type:"浊辅音",desc:"上齿咬下唇，气流摩擦，声带振动",voice:"v",words:["very","five","love","river","seven"]},
+  {sym:"/s/",type:"清辅音",desc:"舌尖靠近上齿龈，气流摩擦",voice:"s",words:["sun","six","bus","see","class"]},
+  {sym:"/z/",type:"浊辅音",desc:"舌尖靠近上齿龈，气流摩擦，声带振动",voice:"z",words:["zoo","nose","eyes","boys","zero"]},
+  {sym:"/ʃ/",type:"清辅音",desc:"舌身抬起，双唇突出，气流摩擦",voice:"sh",words:["she","fish","shirt","wash","short"]},
+  {sym:"/ʒ/",type:"浊辅音",desc:"舌身抬起，双唇突出，气流摩擦，声带振动",voice:"zh",words:["television","usually","measure","treasure","vision"]},
+  {sym:"/θ/",type:"清辅音",desc:"舌尖伸出齿间，气流摩擦，送气",voice:"th",words:["three","think","mouth","thank","thirty"]},
+  {sym:"/ð/",type:"浊辅音",desc:"舌尖伸出齿间，气流摩擦，声带振动",voice:"the",words:["this","that","they","mother","father"]},
+  {sym:"/h/",type:"清辅音",desc:"口张开，气流从声门摩擦而出",voice:"h",words:["hot","hat","house","hand","head"]},
+  {sym:"/r/",type:"浊辅音",desc:"舌尖卷起，不接触上腭，声带振动",voice:"r",words:["red","run","read","rabbit","rice"]},
+  {sym:"/l/",type:"浊辅音",desc:"舌尖抵上齿龈，气流从两侧流出",voice:"l",words:["look","like","blue","tall","long"]},
+  {sym:"/m/",type:"鼻音",desc:"双唇紧闭，气流从鼻腔而出",voice:"m",words:["man","milk","name","mom","room"]},
+  {sym:"/n/",type:"鼻音",desc:"舌尖抵上齿龈，气流从鼻腔而出",voice:"n",words:["no","nine","run","nose","nine"]},
+  {sym:"/ŋ/",type:"鼻音",desc:"舌后部抵软腭，气流从鼻腔而出",voice:"ng",words:["sing","morning","long","ring","king"]},
+  {sym:"/j/",type:"半元音",desc:"舌前部抬高，像发短'衣'",voice:"y",words:["yes","you","yellow","your","young"]},
+  {sym:"/w/",type:"半元音",desc:"双唇圆，像发短'乌'",voice:"w",words:["water","we","window","white","week"]},
+  {sym:"/ts/",type:"清辅音",desc:"由't'和's'组合",voice:"ts",words:["cats","kites","hats","boats","fruits"]},
+  {sym:"/dz/",type:"浊辅音",desc:"由'd'和'z'组合",voice:"dz",words:["birds","beds","hands","friends","roads"]},
+  {sym:"/tr/",type:"清辅音",desc:"由't'和'r'组合",voice:"tr",words:["tree","train","trip","truck","try"]},
+  {sym:"/dr/",type:"浊辅音",desc:"由'd'和'r'组合",voice:"dr",words:["drink","drive","dress","draw","dream"]}
 ];
 
 var curIdx = 0;
 
-// 发音函数：优先用有道词典真人发音，失败用浏览器TTS
-function speak(text){
+// 发音函数：播放音标本身的发音（用拟音拼写）
+function playSound(){
+  var p = PHONICS[curIdx];
+  var text = p.voice;
+  // 优先用有道词典发音
+  try {
+    var audio = new Audio('https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=2');
+    audio.playbackRate = 0.75;
+    audio.onerror = function(){
+      // 有道失败，用浏览器TTS
+      try {
+        var u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        u.rate = 0.7;
+        speechSynthesis.speak(u);
+      } catch(e2) {}
+    };
+    audio.play();
+  } catch(e) {
+    try {
+      var u2 = new SpeechSynthesisUtterance(text);
+      u2.lang = 'en-US';
+      u2.rate = 0.7;
+      speechSynthesis.speak(u2);
+    } catch(e3) {}
+  }
+}
+
+// 播放单词发音（例词）
+function speakWord(text){
   try {
     var audio = new Audio('https://dict.youdao.com/dictvoice?audio=' + encodeURIComponent(text) + '&type=2');
     audio.playbackRate = 0.85;
@@ -190,18 +221,18 @@ function renderCard(){
   document.getElementById('cDesc').textContent = p.desc;
   var wh = '';
   for(var i=0;i<p.words.length;i++){
-    wh += '<div class="word-item" onclick="playWord('+i+')"><div class="en">'+p.words[i]+'</div><div class="hint">🔊 点击听</div></div>';
+    wh += '<div class="word-item" onclick="playWord('+i+')"><div class="en">'+p.words[i]+'</div><div class="hint">🔊 点击听单词</div></div>';
   }
   document.getElementById('cWords').innerHTML = wh;
   document.getElementById('readScore').innerHTML = '';
 }
 
 function playWord(idx){
-  speak(PHONICS[curIdx].words[idx]);
+  speakWord(PHONICS[curIdx].words[idx]);
 }
 
 function readAloud(){
-  speak(PHONICS[curIdx].words[0]);
+  playSound();
   document.getElementById('readScore').innerHTML = '<div class="score">🎤 正在听你读...请大声跟读！</div>';
   setTimeout(function(){
     var score = Math.floor(Math.random()*30)+70;
@@ -220,7 +251,6 @@ function next(){
   renderCard();
 }
 
-// 页面加载完成后初始化
 window.onload = function(){
   showList();
 };
